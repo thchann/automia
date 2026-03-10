@@ -57,6 +57,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        help: {
+          DEFAULT: "hsl(var(--help-button))",
+          foreground: "hsl(var(--help-button-foreground))",
+        },
+        cookie: {
+          DEFAULT: "hsl(var(--cookie-bg))",
+          foreground: "hsl(var(--cookie-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
