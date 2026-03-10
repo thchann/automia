@@ -67,6 +67,25 @@ All colors MUST be HSL.
     --metric-purple-bg: 270 60% 60% / 0.12;
     --metric-orange: 25 85% 55%;
     --metric-orange-bg: 25 85% 55% / 0.12;
+
+    --owner-owned: 215 80% 55%;
+    --owner-owned-bg: 215 80% 55% / 0.15;
+    --owner-client: 270 60% 60%;
+    --owner-client-bg: 270 60% 60% / 0.15;
+    --owner-advisory: 145 60% 45%;
+    --owner-advisory-bg: 145 60% 45% / 0.15;
+
+    --status-available: 145 60% 45%;
+    --status-available-bg: 145 60% 45% / 0.15;
+    --status-pending: 45 80% 55%;
+    --status-pending-bg: 45 80% 55% / 0.15;
+    --status-sold: 220 5% 55%;
+    --status-sold-bg: 220 5% 55% / 0.15;
+
+    --status-active: 145 60% 45%;
+    --status-active-bg: 145 60% 45% / 0.15;
+    --status-paused: 220 5% 55%;
+    --status-paused-bg: 220 5% 55% / 0.15;
   }
 
 }

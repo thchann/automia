@@ -5,9 +5,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import Dashboard from "./pages/Dashboard";
+import Cars from "./pages/Cars";
+import Leads from "./pages/Leads";
+import Automations from "./pages/Automations";
+import AIAssistant from "./pages/AIAssistant";
+import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-
-const Placeholder = () => <div />;
 
 const queryClient = new QueryClient();
 
@@ -21,11 +24,11 @@ const App = () => (
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/cars" element={<Placeholder />} />
-            <Route path="/leads" element={<Placeholder />} />
-            <Route path="/automations" element={<Placeholder />} />
-            <Route path="/ai-assistant" element={<Placeholder />} />
-            <Route path="/settings" element={<Placeholder />} />
+            <Route path="/cars" element={<Cars />} />
+            <Route path="/leads" element={<Leads />} />
+            <Route path="/automations" element={<Automations />} />
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
