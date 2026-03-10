@@ -8,49 +8,65 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 96%;
-    --foreground: 220 20% 14%;
+    --background: 220 6% 20%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 14%;
+    --card: 220 6% 26%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 14%;
+    --popover: 220 6% 26%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 225 25% 20%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 220 6% 15%;
 
-    --secondary: 220 14% 94%;
-    --secondary-foreground: 220 20% 14%;
+    --secondary: 220 6% 28%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 220 14% 94%;
-    --muted-foreground: 220 10% 46%;
+    --muted: 220 5% 30%;
+    --muted-foreground: 220 5% 65%;
 
-    --accent: 220 14% 92%;
-    --accent-foreground: 220 20% 14%;
+    --accent: 220 6% 30%;
+    --accent-foreground: 0 0% 95%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 100%;
-    --input: 220 14% 90%;
-    --ring: 225 25% 20%;
+    --border: 220 5% 32%;
+    --input: 220 5% 32%;
+    --ring: 0 0% 70%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 10% 40%;
-    --sidebar-primary: 225 25% 20%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 95%;
-    --sidebar-accent-foreground: 220 20% 14%;
-    --sidebar-border: 0 0% 100%;
-    --sidebar-ring: 225 25% 20%;
+    --sidebar-background: 220 7% 16%;
+    --sidebar-foreground: 220 5% 70%;
+    --sidebar-primary: 0 0% 95%;
+    --sidebar-primary-foreground: 220 7% 16%;
+    --sidebar-accent: 220 6% 22%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 5% 22%;
+    --sidebar-ring: 0 0% 70%;
 
-    --help-button: 225 25% 20%;
-    --help-button-foreground: 0 0% 100%;
-    --cookie-bg: 220 10% 30%;
-    --cookie-foreground: 0 0% 100%;
+    --help-button: 0 0% 95%;
+    --help-button-foreground: 220 6% 15%;
+    --cookie-bg: 220 5% 30%;
+    --cookie-foreground: 0 0% 85%;
+
+    --status-new: 200 80% 55%;
+    --status-new-bg: 200 80% 55% / 0.15;
+    --status-contacted: 45 80% 55%;
+    --status-contacted-bg: 45 80% 55% / 0.15;
+    --status-qualified: 145 60% 45%;
+    --status-qualified-bg: 145 60% 45% / 0.15;
+
+    --metric-blue: 215 80% 55%;
+    --metric-blue-bg: 215 80% 55% / 0.12;
+    --metric-green: 145 60% 45%;
+    --metric-green-bg: 145 60% 45% / 0.12;
+    --metric-purple: 270 60% 60%;
+    --metric-purple-bg: 270 60% 60% / 0.12;
+    --metric-orange: 25 85% 55%;
+    --metric-orange-bg: 25 85% 55% / 0.12;
   }
 
   .dark {
