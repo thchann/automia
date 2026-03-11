@@ -42,7 +42,7 @@ function DraggableLeadCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-lg border bg-card p-3 shadow-sm border-border cursor-grab active:cursor-grabbing ${isDragging ? "opacity-50" : ""}`}
+      className={`border bg-card p-3 shadow-sm border-border cursor-grab active:cursor-grabbing ${isDragging ? "opacity-50" : ""}`}
       {...listeners}
       {...attributes}
       onClick={() => onLeadClick(lead)}
@@ -221,7 +221,7 @@ export function LeadsFunnel({
         <button
           type="button"
           onClick={handleAddColumn}
-          className="flex-shrink-0 w-64 rounded-lg border-2 border-dashed border-border flex items-center justify-center gap-2 text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+          className="flex-shrink-0 w-64 border-2 border-dashed border-border flex items-center justify-center gap-2 text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
         >
           <Plus className="h-4 w-4" />
           Add column
@@ -229,7 +229,7 @@ export function LeadsFunnel({
       </div>
       <DragOverlay>
         {activeLead ? (
-          <div className="rounded-lg border bg-card p-3 shadow-lg border-border cursor-grabbing opacity-95">
+          <div className="border bg-card p-3 shadow-lg border-border cursor-grabbing opacity-95">
             <LeadCardContent
               lead={activeLead}
               statusStyles={statusStyles}
@@ -269,10 +269,14 @@ function FunnelColumnDropZone({
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
 
+  const hoverClasses = isOver
+    ? "border-primary bg-primary/5"
+    : "border-border bg-muted/30";
+
   return (
     <div
       ref={setNodeRef}
-      className={`flex-shrink-0 w-64 rounded-lg border bg-muted/30 p-3 min-h-[200px] transition-colors ${isOver ? "ring-2 ring-primary" : ""}`}
+      className={`flex-shrink-0 w-64 min-h-[200px] p-3 border transition-colors ${hoverClasses}`}
     >
       <FunnelColumnHeader
         column={column}

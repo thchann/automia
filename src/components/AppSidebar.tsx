@@ -43,13 +43,14 @@ export function AppSidebar() {
     <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <Sidebar collapsible="icon" className="border-r-0 group/sidebar">
         <div className="px-4 py-6 overflow-hidden">
-        <span
-          className="text-lg font-bold text-foreground tracking-tight whitespace-nowrap
-                    opacity-0 group-data-[state=expanded]:opacity-100
-                    transition-opacity"
-        >
-          CarSales AI
-        </span>
+          <span
+            className="text-lg font-bold text-foreground tracking-tight whitespace-nowrap
+                      opacity-100
+                      md:opacity-0 md:group-data-[state=expanded]:opacity-100
+                      transition-opacity"
+            >
+            CarSales AI
+          </span>
         </div>
         <SidebarContent>
           <SidebarGroup>
@@ -71,9 +72,9 @@ export function AppSidebar() {
                           <item.icon className="h-5 w-5" />
                         </div>
                         <span
-                          className="hidden whitespace-nowrap
-                                    group-data-[state=expanded]:inline-flex
-                                    -translate-x-2 group-data-[state=expanded]:translate-x-0
+                          className="inline-flex whitespace-nowrap
+                                    md:hidden md:group-data-[state=expanded]:inline-flex
+                                    md:-translate-x-2 md:group-data-[state=expanded]:translate-x-0
                                     transition-transform duration-150">
                           {item.title}
                         </span>
@@ -86,7 +87,11 @@ export function AppSidebar() {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter className="p-4 overflow-hidden">
-          <button className="hidden text-xs px-3 py-1.5 rounded-md bg-cookie text-cookie-foreground hover:opacity-90 transition-opacity w-fit whitespace-nowrap group-data-[state=expanded]/sidebar-wrapper:inline-flex">
+          <button className="
+            inline-flex text-xs px-3 py-1.5 rounded-md bg-cookie text-cookie-foreground
+            hover:opacity-90 transition-opacity w-fit whitespace-nowrap
+            md:hidden md:group-data-[state=expanded]/sidebar-wrapper:inline-flex"
+            >
             Manage cookies or opt out
           </button>
         </SidebarFooter>
