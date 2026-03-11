@@ -9,6 +9,16 @@ import type { Lead } from "@/pages/Leads";
 
 export type StatusStyles = Record<string, string>;
 
+type LeadTableColumnKey =
+  | "name"
+  | "instagram"
+  | "phone"
+  | "car"
+  | "status"
+  | "source"
+  | "date"
+  | "actions";
+
 type LeadCardProps = {
   lead: Lead;
   statusStyles: StatusStyles;
@@ -16,6 +26,7 @@ type LeadCardProps = {
   onDelete: (lead: Lead) => void;
   variant: "card" | "row";
   onLeadClick?: (lead: Lead) => void;
+  visibleColumns?: LeadTableColumnKey[];
 };
 
 export function LeadCardContent({
@@ -84,32 +95,96 @@ export function LeadCardContent({
 
 export function LeadCard({ lead, statusStyles, onEdit, onDelete, variant, onLeadClick }: LeadCardProps) {
   if (variant === "row") {
+    const columns: LeadTableColumnKey[] =
+      (Array.isArray((arguments[0] as LeadCardProps).visibleColumns) &&
+        (arguments[0] as LeadCardProps).visibleColumns!.length > 0 &&
+        ((arguments[0] as LeadCardProps).visibleColumns as LeadTableColumnKey[])) || [
+        "name",
+        "instagram",
+        "phone",
+        "car",
+        "status",
+        "source",
+        "date",
+        "actions",
+      ];
+
     return (
       <tr className="border-t border-border">
-        <td className="px-4 md:px-6 py-3 md:py-4 text-sm font-medium text-card-foreground">{lead.name}</td>
-        <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.instagram}</td>
-        <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.phone}</td>
-        <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.car}</td>
-        <td className="px-4 md:px-6 py-3 md:py-4">
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
-        </td>
-        <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.source}</td>
-        <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.date}</td>
-        <td className="px-4 md:px-6 py-3 md:py-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
-                <MoreVertical className="h-5 w-5" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(lead)}>Edit lead</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete(lead)} className="text-destructive focus:text-destructive">
-                Delete lead
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </td>
+        {columns.map((col) => {
+          if (col === "name") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4 text-sm font-medium text-card-foreground">
+                {lead.name}
+              </td>
+            );
+          }
+          if (col === "instagram") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">
+                {lead.instagram}
+              </td>
+            );
+          }
+          if (col === "phone") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">
+                {lead.phone}
+              </td>
+            );
+          }
+          if (col === "car") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">
+                {lead.car}
+              </td>
+            );
+          }
+          if (col === "status") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4">
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
+              </td>
+            );
+          }
+          if (col === "source") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">
+                {lead.source}
+              </td>
+            );
+          }
+          if (col === "date") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">
+                {lead.date}
+              </td>
+            );
+          }
+          if (col === "actions") {
+            return (
+              <td key={col} className="px-4 md:px-6 py-3 md:py-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
+                      <MoreVertical className="h-5 w-5" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onEdit(lead)}>Edit lead</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => onDelete(lead)}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      Delete lead
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </td>
+            );
+          }
+          return null;
+        })}
       </tr>
     );
   }
