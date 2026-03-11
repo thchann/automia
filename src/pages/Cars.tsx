@@ -6,6 +6,9 @@ import carMercedes from "@/assets/car-mercedes.jpg";
 import carAudi from "@/assets/car-audi.jpg";
 import carLexus from "@/assets/car-lexus.jpg";
 
+// Cars page lists inventory and client vehicles.
+// It renders a mobile-friendly card list and a desktop table, both backed by
+// the same static sample data for now (ready to swap for API data later).
 const ownerStyles: Record<string, string> = {
   Owned: "bg-[hsl(var(--owner-owned-bg))] text-[hsl(var(--owner-owned))]",
   Client: "bg-[hsl(var(--owner-client-bg))] text-[hsl(var(--owner-client))]",

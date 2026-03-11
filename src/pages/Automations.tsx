@@ -1,5 +1,8 @@
 import { Instagram, MessageCircle, TrendingUp, Settings } from "lucide-react";
 
+// Automations page visualizes configured automation workflows (bots, alerts).
+// Cards are backed by static data and represent how real automation configs
+// and metrics would be surfaced from an API.
 const automations = [
   {
     icon: Instagram,

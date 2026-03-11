@@ -1,6 +1,9 @@
 import { Sparkles, Send } from "lucide-react";
 import { useState } from "react";
 
+// AI Assistant page is a simple chat-style surface for asking questions about
+// cars, leads, and sales. Suggested questions and responses are static; hooking
+// this up to a real backend would route input to an API and stream responses.
 const suggestedQuestions = [
   "How many leads did I get this week?",
   "Which cars are most popular?",

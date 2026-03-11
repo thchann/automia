@@ -4,10 +4,14 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet, useLocation } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
 
+// AppLayoutContent renders the main area inside the sidebar shell,
+// including the mobile header, routed content, and the floating help button.
 function AppLayoutContent() {
   const { setOpenMobile } = useSidebar();
   const location = useLocation();
 
+  // Close the mobile sidebar sheet whenever the route changes so the new page
+  // is fully visible on small screens.
   React.useEffect(() => {
     setOpenMobile(false);
   }, [location.pathname, setOpenMobile]);
@@ -28,6 +32,8 @@ function AppLayoutContent() {
   );
 }
 
+// AppLayout is the shared shell for all primary routes:
+// it wraps pages with the sidebar navigation and main content area.
 export function AppLayout() {
   return (
     <SidebarProvider>

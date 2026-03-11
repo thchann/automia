@@ -11,6 +11,9 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 
+// Main application navigation used by AppLayout.
+// On desktop it renders as a fixed sidebar; on mobile it appears as a sheet
+// controlled by the sidebar system (collapsible="offcanvas").
 const navItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
   { title: "Cars", url: "/cars", icon: Car },

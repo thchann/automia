@@ -12,6 +12,11 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
+// Sidebar system used by AppLayout and AppSidebar.
+// - SidebarProvider manages shared state (desktop open/collapsed, mobile sheet open, isMobile flag).
+// - Sidebar renders either a fixed sidebar (desktop) or a Sheet-based drawer (mobile) based on isMobile.
+// - SidebarInset wraps the main content area so it layouts correctly next to the sidebar.
+// - SidebarTrigger and SidebarRail provide controls to toggle the sidebar from the UI.
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "16rem";

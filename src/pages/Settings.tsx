@@ -1,6 +1,9 @@
 import { User, Instagram } from "lucide-react";
 import { useState } from "react";
 
+// Settings page manages basic account/profile preferences.
+// Form fields are currently local state; in a real app, values would be
+// loaded from and persisted to a backend API.
 const SettingsPage = () => {
   const [name, setName] = useState("Alex Johnson");
   const [email, setEmail] = useState("alex@carsalesai.com");

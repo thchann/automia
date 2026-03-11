@@ -2,9 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Design system tokens.
+   All semantic colors (backgrounds, text, status badges, metrics, etc.) are
+   defined as HSL variables here and then mapped to Tailwind utilities in
+   tailwind.config.ts (e.g. bg-background, text-foreground, bg-sidebar). */
 
 @layer base {
   :root {
