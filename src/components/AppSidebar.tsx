@@ -22,7 +22,7 @@ const navItems = [
 
 export function AppSidebar() {
   return (
-    <Sidebar collapsible="none" className="border-r-0">
+    <Sidebar collapsible="offcanvas" className="border-r-0">
       <div className="px-5 py-6">
         <span className="text-lg font-bold text-foreground tracking-tight">CarSales AI</span>
       </div>
@@ -32,7 +32,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-10">
+                  <SidebarMenuButton asChild className="min-h-11">
                     <NavLink
                       to={item.url}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-foreground transition-colors hover:bg-accent"

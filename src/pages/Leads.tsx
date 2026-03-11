@@ -19,32 +19,52 @@ const leads = [
 const Leads = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-foreground">Leads</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Leads</h1>
       <p className="text-muted-foreground mt-1">Track and manage your sales opportunities.</p>
 
-      <div className="bg-card rounded-xl shadow-sm border border-border overflow-x-auto mt-8">
-        <table className="w-full">
+      <div className="md:hidden divide-y divide-border mt-6">
+        {leads.map((lead) => (
+          <div key={lead.name} className="py-4 first:pt-0">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-sm font-medium text-card-foreground">{lead.name}</p>
+                <p className="text-sm text-muted-foreground mt-0.5">{lead.car}</p>
+                <p className="text-xs text-muted-foreground mt-1">{lead.source} · {lead.date}</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
+                <button className="min-h-11 min-w-11 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg -m-2">
+                  <MoreVertical className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-x-auto mt-8">
+        <table className="w-full min-w-[800px]">
           <thead>
             <tr className="border-b border-border">
               {["Name", "Instagram", "Phone", "Interested Car", "Status", "Source", "Date", "Actions"].map((h) => (
-                <th key={h} className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">{h}</th>
+                <th key={h} className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {leads.map((lead) => (
               <tr key={lead.name} className="border-t border-border">
-                <td className="px-6 py-4 text-sm font-medium text-card-foreground">{lead.name}</td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{lead.instagram}</td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{lead.phone}</td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{lead.car}</td>
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm font-medium text-card-foreground">{lead.name}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.instagram}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.phone}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.car}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
                 </td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{lead.source}</td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{lead.date}</td>
-                <td className="px-6 py-4">
-                  <button className="text-muted-foreground hover:text-foreground transition-colors">
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.source}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.date}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4">
+                  <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
                     <MoreVertical className="h-5 w-5" />
                   </button>
                 </td>

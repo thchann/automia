@@ -30,50 +30,71 @@ const cars = [
 const Cars = () => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Cars</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Cars</h1>
           <p className="text-muted-foreground mt-1">Manage your inventory and client vehicles.</p>
         </div>
-        <button className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity">
+        <button className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity w-full md:w-auto">
           <Plus className="h-4 w-4" />
           Add Car
         </button>
       </div>
 
-      <div className="bg-card rounded-xl shadow-sm border border-border overflow-x-auto">
-        <table className="w-full">
+      <div className="md:hidden space-y-4">
+        {cars.map((car) => (
+          <div key={`${car.make}-${car.model}`} className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <img src={car.image} alt={`${car.make} ${car.model}`} className="w-full h-40 object-cover" />
+            <div className="p-4">
+              <p className="text-sm font-medium text-card-foreground">{car.make} {car.model}</p>
+              <p className="text-xs text-muted-foreground">{car.year} · {car.price}</p>
+              <div className="flex items-center justify-between mt-3">
+                <div className="flex gap-2">
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${ownerStyles[car.owner]}`}>{car.owner}</span>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[car.status]}`}>{car.status}</span>
+                </div>
+                <button className="min-h-11 min-w-11 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg -m-2">
+                  <MoreVertical className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-x-auto">
+        <table className="w-full min-w-[700px]">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Image</th>
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Make/Model</th>
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Year</th>
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Price</th>
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Owner Type</th>
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Status</th>
-              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Actions</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Image</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Make/Model</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Year</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Price</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Owner Type</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Status</th>
+              <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Actions</th>
             </tr>
           </thead>
           <tbody>
             {cars.map((car) => (
               <tr key={`${car.make}-${car.model}`} className="border-t border-border">
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <img src={car.image} alt={`${car.make} ${car.model}`} className="h-14 w-20 object-cover rounded-lg" />
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <p className="text-sm font-medium text-card-foreground">{car.make}</p>
                   <p className="text-xs text-muted-foreground">{car.model}</p>
                 </td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{car.year}</td>
-                <td className="px-6 py-4 text-sm font-medium text-card-foreground">{car.price}</td>
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{car.year}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4 text-sm font-medium text-card-foreground">{car.price}</td>
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${ownerStyles[car.owner]}`}>{car.owner}</span>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 md:px-6 py-3 md:py-4">
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[car.status]}`}>{car.status}</span>
                 </td>
-                <td className="px-6 py-4">
-                  <button className="text-muted-foreground hover:text-foreground transition-colors">
+                <td className="px-4 md:px-6 py-3 md:py-4">
+                  <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
                     <MoreVertical className="h-5 w-5" />
                   </button>
                 </td>

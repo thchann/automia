@@ -30,7 +30,7 @@ const metricIconStyles: Record<string, { bg: string; text: string }> = {
 const Dashboard = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
       <p className="text-muted-foreground mt-1">Welcome back! Here's your overview.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
@@ -49,32 +49,46 @@ const Dashboard = () => {
       </div>
 
       <div className="bg-card rounded-xl shadow-sm border border-border mt-8">
-        <div className="p-6 pb-4">
-          <h2 className="text-xl font-bold text-card-foreground">Recent Leads</h2>
+        <div className="p-4 md:p-6 pb-4">
+          <h2 className="text-lg md:text-xl font-bold text-card-foreground">Recent Leads</h2>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="md:hidden divide-y divide-border">
+          {leads.map((lead) => (
+            <div key={lead.name} className="p-4">
+              <p className="text-sm font-medium text-card-foreground">{lead.name}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">{lead.car}</p>
+              <div className="flex items-center justify-between mt-2">
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>
+                  {lead.status}
+                </span>
+                <span className="text-xs text-muted-foreground">{lead.date}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-t border-border">
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Name</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Interested Car</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Source</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Status</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-6 py-3">Date</th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Name</th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Interested Car</th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Source</th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Status</th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Date</th>
               </tr>
             </thead>
             <tbody>
               {leads.map((lead) => (
                 <tr key={lead.name} className="border-t border-border">
-                  <td className="px-6 py-4 text-sm font-medium text-card-foreground">{lead.name}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{lead.car}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{lead.source}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 md:px-6 py-3 md:py-4 text-sm font-medium text-card-foreground">{lead.name}</td>
+                  <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.car}</td>
+                  <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.source}</td>
+                  <td className="px-4 md:px-6 py-3 md:py-4">
                     <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>
                       {lead.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{lead.date}</td>
+                  <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.date}</td>
                 </tr>
               ))}
             </tbody>

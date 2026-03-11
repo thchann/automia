@@ -12,14 +12,14 @@ const AIAssistant = () => {
   const [input, setInput] = useState("");
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)]">
+    <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-1">
-        <Sparkles className="h-7 w-7 text-[hsl(var(--metric-purple))]" />
-        <h1 className="text-3xl font-bold text-foreground">AI Assistant</h1>
+        <Sparkles className="h-6 w-6 md:h-7 md:w-7 text-[hsl(var(--metric-purple))]" />
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">AI Assistant</h1>
       </div>
-      <p className="text-muted-foreground mb-6">Ask questions about your cars, leads, and sales.</p>
+      <p className="text-muted-foreground mb-4 md:mb-6">Ask questions about your cars, leads, and sales.</p>
 
-      <div className="flex-1 bg-card rounded-xl border border-border p-6 flex flex-col">
+      <div className="flex-1 bg-card rounded-xl border border-border p-4 md:p-6 flex flex-col">
         <div className="flex-1">
           <div className="bg-muted rounded-lg p-4 max-w-2xl">
             <p className="text-sm text-card-foreground">
@@ -36,7 +36,7 @@ const AIAssistant = () => {
               <button
                 key={q}
                 onClick={() => setInput(q)}
-                className="text-left text-sm px-4 py-3 rounded-lg border border-border text-card-foreground hover:bg-muted transition-colors"
+                className="text-left text-sm px-4 py-3 min-h-11 rounded-lg border border-border text-card-foreground hover:bg-muted transition-colors"
               >
                 {q}
               </button>
@@ -45,15 +45,15 @@ const AIAssistant = () => {
         </div>
       </div>
 
-      <div className="mt-4 bg-card rounded-xl border border-border flex items-center p-2">
+      <div className="mt-4 bg-card rounded-xl border border-border flex items-center gap-2 p-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask me anything..."
-          className="flex-1 bg-transparent px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+          className="flex-1 bg-transparent px-4 py-3 min-h-11 text-sm text-foreground placeholder:text-muted-foreground outline-none"
         />
-        <button className="flex items-center gap-2 bg-muted text-card-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-80 transition-opacity">
+        <button className="flex items-center gap-2 bg-muted text-card-foreground px-4 py-3 min-h-11 rounded-lg text-sm font-medium hover:opacity-80 transition-opacity shrink-0">
           <Send className="h-4 w-4" />
           Send
         </button>

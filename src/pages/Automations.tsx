@@ -46,12 +46,12 @@ const automations = [
 const Automations = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-foreground">Automations</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Automations</h1>
       <p className="text-muted-foreground mt-1">Manage your automated workflows and bots.</p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-6 md:mt-8">
         {automations.map((a) => (
-          <div key={a.title} className="bg-card rounded-xl shadow-sm border border-border p-6 flex flex-col">
+          <div key={a.title} className="bg-card rounded-xl shadow-sm border border-border p-4 md:p-6 flex flex-col">
             <div className="flex items-start gap-4 mb-4">
               <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
                 <a.icon className="h-5 w-5 text-foreground" />
@@ -89,7 +89,7 @@ const Automations = () => {
             </div>
 
             {a.status === "Active" && (
-              <button className="w-full flex items-center justify-center gap-2 border border-border rounded-lg py-2.5 text-sm font-medium text-card-foreground hover:bg-muted transition-colors mt-auto">
+              <button className="w-full flex items-center justify-center gap-2 border border-border rounded-lg py-3 min-h-11 text-sm font-medium text-card-foreground hover:bg-muted transition-colors mt-auto">
                 <Settings className="h-4 w-4" />
                 Configure
               </button>
