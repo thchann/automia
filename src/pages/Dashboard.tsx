@@ -1,5 +1,8 @@
 import { Car, TrendingUp, Users, Zap } from "lucide-react";
 
+// Dashboard shows a high-level overview: metric cards and recent leads.
+// All data is currently static sample data and can be replaced with API-backed
+// React Query hooks in the future.
 const metrics = [
   { icon: Car, value: "24", label: "Active Cars", colorClass: "metric-blue" },
   { icon: TrendingUp, value: "8", label: "New Leads Today", colorClass: "metric-green" },

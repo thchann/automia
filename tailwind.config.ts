@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 
+// Tailwind theme configuration.
+// Colors reference CSS custom properties defined in src/index.css so components
+// can use semantic utilities like bg-background, text-foreground, bg-sidebar,
+// and status/owner/metric colors.
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],

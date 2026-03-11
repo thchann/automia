@@ -60,6 +60,14 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+At a high level:
+
+- `src/main.tsx` mounts the React app into `index.html` and loads global styles from `src/index.css`.
+- `src/App.tsx` wires up providers (React Query, tooltips, toasts) and defines the main routes.
+- `src/components/AppLayout.tsx` and `src/components/AppSidebar.tsx` define the shared layout shell (sidebar + content).
+- `src/pages/*` contains each route’s page component (Dashboard, Cars, Leads, Automations, AI Assistant, Settings, NotFound).
+- `src/components/ui/*` contains reusable UI primitives (buttons, cards, dialogs, sidebar, etc.).
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.

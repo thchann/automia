@@ -1,4 +1,45 @@
-import { MoreVertical } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { LeadCard } from "@/components/LeadCard";
+import { LeadsFunnel } from "@/components/LeadsFunnel";
+
+const VIEW_LABELS_KEY = "leads-view-labels";
+
+// Leads page tracks potential customers and their interest in cars.
+// Static seed data is used for now; in a real app this would come from an API
+// and be wired through React Query.
+export type Lead = {
+  id: string;
+  name: string;
+  instagram: string;
+  phone: string;
+  car: string;
+  status: string;
+  source: string;
+  date: string;
+};
+
+export type FunnelColumn = {
+  id: string;
+  name: string;
+  statusKey: string;
+};
 
 const statusStyles: Record<string, string> = {
   New: "bg-[hsl(var(--status-new-bg))] text-[hsl(var(--status-new))]",
@@ -6,73 +47,283 @@ const statusStyles: Record<string, string> = {
   Qualified: "bg-[hsl(var(--status-qualified-bg))] text-[hsl(var(--status-qualified))]",
 };
 
-const leads = [
-  { name: "John Martinez", instagram: "@johnm_auto", phone: "(555) 123-4567", car: "2024 Tesla Model 3", status: "New", source: "Instagram DM", date: "Mar 8, 2026" },
-  { name: "Sarah Johnson", instagram: "@sarahj", phone: "(555) 234-5678", car: "2023 BMW M4", status: "Contacted", source: "Facebook", date: "Mar 7, 2026" },
-  { name: "Michael Chen", instagram: "@mikechen", phone: "(555) 345-6789", car: "2024 Porsche 911", status: "Qualified", source: "Instagram Story", date: "Mar 7, 2026" },
-  { name: "Emma Wilson", instagram: "@emmaw", phone: "(555) 456-7890", car: "2023 Mercedes C-Class", status: "New", source: "Website Form", date: "Mar 6, 2026" },
-  { name: "David Brown", instagram: "@dbrown_cars", phone: "(555) 567-8901", car: "2024 Audi RS6", status: "Contacted", source: "Instagram DM", date: "Mar 6, 2026" },
-  { name: "Lisa Anderson", instagram: "@lisaa", phone: "(555) 678-9012", car: "2023 Lexus LC 500", status: "Qualified", source: "Instagram Post", date: "Mar 5, 2026" },
-  { name: "Robert Taylor", instagram: "@rob_t", phone: "(555) 789-0123", car: "2024 Tesla Model S", status: "New", source: "Instagram DM", date: "Mar 5, 2026" },
+const initialLeads: Lead[] = [
+  { id: "1", name: "John Martinez", instagram: "@johnm_auto", phone: "(555) 123-4567", car: "2024 Tesla Model 3", status: "New", source: "Instagram DM", date: "Mar 8, 2026" },
+  { id: "2", name: "Sarah Johnson", instagram: "@sarahj", phone: "(555) 234-5678", car: "2023 BMW M4", status: "Contacted", source: "Facebook", date: "Mar 7, 2026" },
+  { id: "3", name: "Michael Chen", instagram: "@mikechen", phone: "(555) 345-6789", car: "2024 Porsche 911", status: "Qualified", source: "Instagram Story", date: "Mar 7, 2026" },
+  { id: "4", name: "Emma Wilson", instagram: "@emmaw", phone: "(555) 456-7890", car: "2023 Mercedes C-Class", status: "New", source: "Website Form", date: "Mar 6, 2026" },
+  { id: "5", name: "David Brown", instagram: "@dbrown_cars", phone: "(555) 567-8901", car: "2024 Audi RS6", status: "Contacted", source: "Instagram DM", date: "Mar 6, 2026" },
+  { id: "6", name: "Lisa Anderson", instagram: "@lisaa", phone: "(555) 678-9012", car: "2023 Lexus LC 500", status: "Qualified", source: "Instagram Post", date: "Mar 5, 2026" },
+  { id: "7", name: "Robert Taylor", instagram: "@rob_t", phone: "(555) 789-0123", car: "2024 Tesla Model S", status: "New", source: "Instagram DM", date: "Mar 5, 2026" },
 ];
 
+const defaultFunnelColumns: FunnelColumn[] = [
+  { id: "col-new", name: "New", statusKey: "New" },
+  { id: "col-contacted", name: "Contacted", statusKey: "Contacted" },
+  { id: "col-qualified", name: "Qualified", statusKey: "Qualified" },
+];
+
+const loadViewLabels = (): { table: string; funnel: string } => {
+  try {
+    const s = localStorage.getItem(VIEW_LABELS_KEY);
+    if (s) {
+      const parsed = JSON.parse(s) as { table?: string; funnel?: string };
+      return { table: parsed.table ?? "Table", funnel: parsed.funnel ?? "Funnel" };
+    }
+  } catch {
+    // ignore
+  }
+  return { table: "Table", funnel: "Funnel" };
+};
+
 const Leads = () => {
+  const [leads, setLeads] = useState<Lead[]>(initialLeads);
+  const [view, setView] = useState<"table" | "funnel">("table");
+  const [funnelColumns, setFunnelColumns] = useState<FunnelColumn[]>(defaultFunnelColumns);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [tableLabel, setTableLabel] = useState(() => loadViewLabels().table);
+  const [funnelLabel, setFunnelLabel] = useState(() => loadViewLabels().funnel);
+  const [editingTab, setEditingTab] = useState<"table" | "funnel" | null>(null);
+  const [editTabValue, setEditTabValue] = useState("");
+  const tableLabelInputRef = useRef<HTMLInputElement>(null);
+  const funnelLabelInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem(VIEW_LABELS_KEY, JSON.stringify({ table: tableLabel, funnel: funnelLabel }));
+  }, [tableLabel, funnelLabel]);
+
+  useEffect(() => {
+    if (editingTab === "table") tableLabelInputRef.current?.focus();
+    else if (editingTab === "funnel") funnelLabelInputRef.current?.focus();
+  }, [editingTab]);
+
+  const handleDeleteLead = (lead: Lead) => {
+    setLeadToDelete(lead);
+  };
+
+  const confirmDelete = () => {
+    if (leadToDelete) {
+      setLeads((prev) => prev.filter((l) => l.id !== leadToDelete.id));
+      setLeadToDelete(null);
+    }
+  };
+
+  const handleLeadStatusChange = (leadId: string, newStatusKey: string) => {
+    setLeads((prev) =>
+      prev.map((l) => (l.id === leadId ? { ...l, status: newStatusKey } : l))
+    );
+  };
+
+  const handleColumnsChange = (columns: FunnelColumn[]) => {
+    setFunnelColumns(columns);
+  };
+
+  const saveTableLabel = () => {
+    const v = editTabValue.trim();
+    if (v) setTableLabel(v);
+    else setEditTabValue(tableLabel);
+    setEditingTab(null);
+  };
+
+  const saveFunnelLabel = () => {
+    const v = editTabValue.trim();
+    if (v) setFunnelLabel(v);
+    else setEditTabValue(funnelLabel);
+    setEditingTab(null);
+  };
+
+  const handleGenerateLead = () => {
+    setLeads((prev) => [
+      ...prev,
+      {
+        id: `new-${Date.now()}`,
+        name: "New Lead",
+        instagram: "",
+        phone: "",
+        car: "",
+        status: "New",
+        source: "",
+        date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      },
+    ]);
+  };
+
   return (
     <div>
       <h1 className="text-2xl md:text-3xl font-bold text-foreground">Leads</h1>
       <p className="text-muted-foreground mt-1">Track and manage your sales opportunities.</p>
 
-      <div className="md:hidden divide-y divide-border mt-6">
-        {leads.map((lead) => (
-          <div key={lead.name} className="py-4 first:pt-0">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-sm font-medium text-card-foreground">{lead.name}</p>
-                <p className="text-sm text-muted-foreground mt-0.5">{lead.car}</p>
-                <p className="text-xs text-muted-foreground mt-1">{lead.source} · {lead.date}</p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
-                <button className="min-h-11 min-w-11 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg -m-2">
-                  <MoreVertical className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="flex items-center justify-between gap-4 mt-3">
+        <div className="flex items-center gap-1">
+          {editingTab === "table" ? (
+            <input
+              ref={tableLabelInputRef}
+              type="text"
+              value={editTabValue}
+              onChange={(e) => setEditTabValue(e.target.value)}
+              onBlur={saveTableLabel}
+              onKeyDown={(e) => e.key === "Enter" && saveTableLabel()}
+              className="w-24 text-sm font-medium pb-2 -mb-px border-b-2 border-primary bg-transparent text-foreground outline-none"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setView("table")}
+              onDoubleClick={(e) => {
+                e.preventDefault();
+                setEditingTab("table");
+                setEditTabValue(tableLabel);
+              }}
+              className={`text-sm font-medium pb-2 -mb-px border-b-2 transition-colors ${
+                view === "table"
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tableLabel}
+            </button>
+          )}
+          {editingTab === "funnel" ? (
+            <input
+              ref={funnelLabelInputRef}
+              type="text"
+              value={editTabValue}
+              onChange={(e) => setEditTabValue(e.target.value)}
+              onBlur={saveFunnelLabel}
+              onKeyDown={(e) => e.key === "Enter" && saveFunnelLabel()}
+              className="w-24 text-sm font-medium pb-2 -mb-px border-b-2 border-primary bg-transparent text-foreground outline-none ml-6"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setView("funnel")}
+              onDoubleClick={(e) => {
+                e.preventDefault();
+                setEditingTab("funnel");
+                setEditTabValue(funnelLabel);
+              }}
+              className={`text-sm font-medium pb-2 -mb-px border-b-2 transition-colors ml-6 ${
+                view === "funnel"
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {funnelLabel}
+            </button>
+          )}
+          <button
+            type="button"
+            aria-label="Add lead tracker"
+            className="ml-2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={handleGenerateLead}
+          className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+        >
+          <Plus className="h-4 w-4" />
+          Generate lead
+        </button>
       </div>
 
-      <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-x-auto mt-8">
-        <table className="w-full min-w-[800px]">
-          <thead>
-            <tr className="border-b border-border">
-              {["Name", "Instagram", "Phone", "Interested Car", "Status", "Source", "Date", "Actions"].map((h) => (
-                <th key={h} className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
+      <div className="border-b border-border mt-2" />
+
+      {view === "table" && (
+        <>
+          <div className="md:hidden divide-y divide-border mt-6">
             {leads.map((lead) => (
-              <tr key={lead.name} className="border-t border-border">
-                <td className="px-4 md:px-6 py-3 md:py-4 text-sm font-medium text-card-foreground">{lead.name}</td>
-                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.instagram}</td>
-                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.phone}</td>
-                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.car}</td>
-                <td className="px-4 md:px-6 py-3 md:py-4">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
-                </td>
-                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.source}</td>
-                <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.date}</td>
-                <td className="px-4 md:px-6 py-3 md:py-4">
-                  <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
-                    <MoreVertical className="h-5 w-5" />
-                  </button>
-                </td>
-              </tr>
+              <div key={lead.id} className="py-4 first:pt-0">
+                <LeadCard
+                  lead={lead}
+                  statusStyles={statusStyles}
+                  variant="card"
+                  onEdit={setSelectedLead}
+                  onDelete={handleDeleteLead}
+                  onLeadClick={setSelectedLead}
+                />
+              </div>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </div>
+
+          <div className="hidden md:block bg-card rounded-xl shadow-sm border border-border overflow-x-auto mt-8">
+            <table className="w-full min-w-[800px]">
+              <thead>
+                <tr className="border-b border-border">
+                  {["Name", "Instagram", "Phone", "Interested Car", "Status", "Source", "Date", "Actions"].map((h) => (
+                    <th key={h} className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {leads.map((lead) => (
+                  <LeadCard
+                    key={lead.id}
+                    lead={lead}
+                    statusStyles={statusStyles}
+                    variant="row"
+                    onEdit={setSelectedLead}
+                    onDelete={handleDeleteLead}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {view === "funnel" && (
+        <div className="mt-6">
+          <LeadsFunnel
+            leads={leads}
+            columns={funnelColumns}
+            onLeadStatusChange={handleLeadStatusChange}
+            onColumnsChange={handleColumnsChange}
+            onLeadClick={setSelectedLead}
+            onDeleteLead={handleDeleteLead}
+            statusStyles={statusStyles}
+          />
+        </div>
+      )}
+
+      <Dialog open={!!selectedLead} onOpenChange={(open) => !open && setSelectedLead(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Lead details</DialogTitle>
+          </DialogHeader>
+          {selectedLead && (
+            <div className="grid gap-3 text-sm">
+              <p><span className="font-medium text-muted-foreground">Name</span><br />{selectedLead.name}</p>
+              <p><span className="font-medium text-muted-foreground">Instagram</span><br />{selectedLead.instagram}</p>
+              <p><span className="font-medium text-muted-foreground">Phone</span><br />{selectedLead.phone}</p>
+              <p><span className="font-medium text-muted-foreground">Interested car</span><br />{selectedLead.car}</p>
+              <p><span className="font-medium text-muted-foreground">Status</span><br /><span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[selectedLead.status]}`}>{selectedLead.status}</span></p>
+              <p><span className="font-medium text-muted-foreground">Source</span><br />{selectedLead.source}</p>
+              <p><span className="font-medium text-muted-foreground">Date</span><br />{selectedLead.date}</p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={!!leadToDelete} onOpenChange={(open) => !open && setLeadToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete lead</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {leadToDelete?.name}? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

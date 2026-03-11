@@ -1,6 +1,8 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
+// NotFound is the catch-all 404 route.
+// It logs the missing path to the console to help debug broken links.
 const NotFound = () => {
   const location = useLocation();
 

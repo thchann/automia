@@ -12,16 +12,22 @@ import AIAssistant from "./pages/AIAssistant";
 import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
+// Single QueryClient instance used for all React Query hooks in the app.
 const queryClient = new QueryClient();
 
+// App wires global providers (data fetching, tooltips, toasts) and the main route tree.
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      {/* Shadcn-style toasts driven by the custom useToast hook */}
       <Toaster />
+      {/* Sonner-style toasts themed via next-themes */}
       <Sonner />
       <BrowserRouter>
         <Routes>
+          {/* Redirect root to the main dashboard */}
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* All primary routes share the AppLayout shell (sidebar + content area) */}
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/cars" element={<Cars />} />
@@ -30,6 +36,7 @@ const App = () => (
             <Route path="/ai-assistant" element={<AIAssistant />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
+          {/* Catch-all 404 route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
