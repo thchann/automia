@@ -36,7 +36,10 @@ function AppLayoutContent() {
 // it wraps pages with the sidebar navigation and main content area.
 export function AppLayout() {
   return (
-    <SidebarProvider>
+    // SidebarProvider manages global sidebar state. We default to collapsed on
+    // desktop so the app starts with an icon rail that expands on hover or via
+    // the keyboard shortcut (⌘/Ctrl + B).
+    <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <SidebarInset>
