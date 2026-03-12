@@ -171,63 +171,63 @@ const Cars = () => {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6 md:mb-8">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Cars</h1>
-          <p className="text-muted-foreground mt-1">Manage your inventory and client vehicles.</p>
+      <div className="mb-4 md:mb-6 text-left">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Cars</h1>
+        <p className="text-muted-foreground mt-1">Manage your inventory and client vehicles.</p>
+      </div>
+
+      {/* Search + filters + primary action row */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
+        <div className="flex items-center gap-4">
+          <input
+            type="text"
+            // Search is not wired yet; placeholder for future behavior.
+            // value={searchQuery}
+            // onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search cars..."
+            className="w-full md:max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          />
+          <div className="flex items-center gap-2 text-xs">
+            <details className="relative">
+              <summary className="list-none cursor-pointer rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
+                Filters
+              </summary>
+              <div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">Visible columns</p>
+                <div className="flex flex-col space-y-1 max-h-40 overflow-auto mb-1">
+                  {carColumns.map((col) => (
+                    <label
+                      key={col.key}
+                      className="flex w-full items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted transition-colors"
+                    >
+                      <input
+                        type="checkbox"
+                        className="shrink-0"
+                        checked={visibleColumns.includes(col.key)}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setVisibleColumns((prev) => {
+                            if (checked) {
+                              return prev.includes(col.key) ? prev : [...prev, col.key];
+                            }
+                            const next = prev.filter((k) => k !== col.key);
+                            // Prevent hiding all columns
+                            return next.length ? next : prev;
+                          });
+                        }}
+                      />
+                      <span className="flex-1 text-xs text-foreground">{col.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </details>
+          </div>
         </div>
         <button className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity w-full md:w-auto">
           <Plus className="h-4 w-4" />
           Add Car
         </button>
-      </div>
-
-      {/* Shared search + filters row for all breakpoints */}
-      <div className="flex items-center gap-4 mb-4">
-        <input
-          type="text"
-          // Search is not wired yet; placeholder for future behavior.
-          // value={searchQuery}
-          // onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search cars..."
-          className="w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        />
-        <div className="flex items-center gap-2 text-xs">
-          <details className="relative">
-            <summary className="list-none cursor-pointer rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
-              Filters
-            </summary>
-            <div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
-              <p className="text-xs font-semibold text-muted-foreground mb-1">Visible columns</p>
-              <div className="flex flex-col space-y-1 max-h-40 overflow-auto mb-1">
-                {carColumns.map((col) => (
-                  <label
-                    key={col.key}
-                    className="flex w-full items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      className="shrink-0"
-                      checked={visibleColumns.includes(col.key)}
-                      onChange={(e) => {
-                        const checked = e.target.checked;
-                        setVisibleColumns((prev) => {
-                          if (checked) {
-                            return prev.includes(col.key) ? prev : [...prev, col.key];
-                          }
-                          const next = prev.filter((k) => k !== col.key);
-                          // Prevent hiding all columns
-                          return next.length ? next : prev;
-                        });
-                      }}
-                    />
-                    <span className="flex-1 text-xs text-foreground">{col.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </details>
-        </div>
       </div>
 
       {/* Table layout for all breakpoints (Google Sheets style), with horizontal scroll on small screens */}
