@@ -13,22 +13,25 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 // Main application navigation used by AppLayout.
 // Two-column layout: fixed-width rail (icons) + text column (labels when expanded).
 // Rail width = --sidebar-width-icon so border and icon padding stay proportional; icons never shift.
 const navItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Cars", url: "/cars", icon: Car },
-  { title: "Leads", url: "/leads", icon: Users },
-  { title: "Automations", url: "/automations", icon: Zap },
-  { title: "AI Assistant", url: "/ai-assistant", icon: MessageCircle },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutGrid },
+  { titleKey: "nav.cars", url: "/cars", icon: Car },
+  { titleKey: "nav.leads", url: "/leads", icon: Users },
+  { titleKey: "nav.automations", url: "/automations", icon: Zap },
+  { titleKey: "nav.aiAssistant", url: "/ai-assistant", icon: MessageCircle },
+  { titleKey: "nav.settings", url: "/settings", icon: Settings },
 ];
 
 const iconColumnWidth = "w-12 shrink-0"; // 3rem icon column inside rail
 
 export function AppSidebar() {
+  const { t } = useLanguage();
+
   return (
     <Sidebar collapsible="icon" className="group/sidebar">
       {/* Two-column layout: rail (fixed width) + text (hidden when collapsed). Positions stay fixed. */}
@@ -72,7 +75,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu className="gap-0.5">
                 {navItems.map((item) => (
-                  <div key={item.title} className="flex w-full">
+                  <div key={item.titleKey} className="flex w-full">
                     {/* Rail: fixed width; text column: grows when expanded. One NavLink spans both so active state and a11y are correct. */}
                     <SidebarMenuItem className="group/nav-item w-full shrink-0">
                       <SidebarMenuButton
@@ -114,7 +117,7 @@ export function AppSidebar() {
                               "md:group-data-[state=expanded]:inline-block",
                             )}
                           >
-                            {item.title}
+                            {t(item.titleKey)}
                           </span>
                         </NavLink>
                       </SidebarMenuButton>
@@ -140,12 +143,8 @@ export function AppSidebar() {
                 "md:group-data-[state=expanded]:flex",
               )}
             >
-              <button
-                className={cn(
-                  "w-fit whitespace-nowrap rounded-md bg-cookie px-3 py-1.5 text-xs text-cookie-foreground transition-opacity hover:opacity-90",
-                )}
-              >
-                Manage cookies or opt out
+              <button className={cn("w-fit whitespace-nowrap rounded-md bg-cookie px-3 py-1.5 text-xs text-cookie-foreground transition-opacity hover:opacity-90")}>
+                {t("nav.cookies")}
               </button>
             </div>
           </div>

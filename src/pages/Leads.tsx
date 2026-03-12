@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LeadCard } from "@/components/LeadCard";
 import { LeadsFunnel } from "@/components/LeadsFunnel";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 // Leads page tracks potential customers and their interest in cars.
 // Static seed data is used for now; in a real app this would come from an API
@@ -144,6 +145,13 @@ const Leads = () => {
     return "asc";
   });
 
+  const { t } = useLanguage();
+
+  const localizedLeadColumns: LeadColumnConfig[] = leadColumns.map((c) => ({
+    ...c,
+    label: t(`leads.column.${c.key}`),
+  }));
+
   useEffect(() => {
     localStorage.setItem(LEADS_VISIBLE_COLUMNS_KEY, JSON.stringify(visibleColumns));
   }, [visibleColumns]);
@@ -209,7 +217,7 @@ const Leads = () => {
     }
   };
 
-  const orderedColumns = leadColumns.filter((c) => visibleColumns.includes(c.key));
+  const orderedColumns = localizedLeadColumns.filter((c) => visibleColumns.includes(c.key));
 
   const sortedLeads = (() => {
     // Start from original leads
@@ -252,10 +260,19 @@ const Leads = () => {
     return sorted;
   })();
 
+  const statusLabelKeyByValue: Record<string, string> = {
+    New: "status.new",
+    Contacted: "status.contacted",
+    Qualified: "status.qualified",
+  };
+
+  const getLeadStatusLabel = (status: string) =>
+    t(statusLabelKeyByValue[status] ?? status);
+
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Leads</h1>
-      <p className="text-muted-foreground mt-1">Track and manage your sales opportunities.</p>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("leads.title")}</h1>
+      <p className="text-muted-foreground mt-1">{t("leads.subtitle")}</p>
 
       <div className="flex items-center justify-between gap-4 mt-3">
         <div className="flex items-center gap-1">
@@ -268,7 +285,7 @@ const Leads = () => {
                 : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
             }`}
           >
-            Table
+            {t("leads.tableTab")}
           </button>
           <button
             type="button"
@@ -279,16 +296,16 @@ const Leads = () => {
                 : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
             }`}
           >
-            Funnel
+            {t("leads.funnelTab")}
           </button>
         </div>
         <button
           type="button"
           onClick={handleGenerateLead}
           className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm border border-border hover:opacity-90 transition-opacity"
-        >
+          >
           <Plus className="h-4 w-4" />
-          Generate lead
+          {t("leads.generateLead")}
         </button>
       </div>
 
@@ -303,18 +320,20 @@ const Leads = () => {
               // Search is not wired yet; placeholder for future behavior.
               // value={searchQuery}
               // onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search leads..."
+              placeholder={t("leads.searchPlaceholder")}
               className="w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             />
             <div className="flex items-center gap-2 text-xs">
               <details className="relative">
                 <summary className="list-none cursor-pointer rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
-                  Filters
+                  {t("leads.filters")}
                 </summary>
                 <div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
-                  <p className="text-xs font-semibold text-muted-foreground mb-1">Visible columns</p>
+                  <p className="text-xs font-semibold text-muted-foreground mb-1">
+                    {t("leads.visibleColumns")}
+                  </p>
                   <div className="flex flex-col space-y-1 max-h-40 overflow-auto mb-1">
-                    {leadColumns.map((col) => (
+                    {localizedLeadColumns.map((col) => (
                       <label
                         key={col.key}
                         className="flex w-full items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted transition-colors"
@@ -419,32 +438,42 @@ const Leads = () => {
       <Dialog open={!!selectedLead} onOpenChange={(open) => !open && setSelectedLead(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Lead details</DialogTitle>
+            <DialogTitle>{t("leads.leadDetails")}</DialogTitle>
           </DialogHeader>
           {selectedLead && (
             <div className="grid gap-3 text-sm">
               <p>
-                <span className="font-medium text-muted-foreground">Name</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.name")}
+                </span>
                 <br />
                 {selectedLead.name}
               </p>
               <p>
-                <span className="font-medium text-muted-foreground">Instagram</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.instagram")}
+                </span>
                 <br />
                 {selectedLead.instagram}
               </p>
               <p>
-                <span className="font-medium text-muted-foreground">Phone</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.phone")}
+                </span>
                 <br />
                 {selectedLead.phone}
               </p>
               <p>
-                <span className="font-medium text-muted-foreground">Interested car</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.car")}
+                </span>
                 <br />
                 {selectedLead.car}
               </p>
               <div>
-                <span className="font-medium text-muted-foreground">Status</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.status")}
+                </span>
                 <br />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -453,7 +482,7 @@ const Leads = () => {
                       className="mt-1 inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium border border-border bg-card hover:bg-muted transition-colors"
                     >
                       <span className={`px-2 py-0.5 rounded-full ${statusStyles[selectedLead.status] ?? ""}`}>
-                        {selectedLead.status}
+                        {getLeadStatusLabel(selectedLead.status)}
                       </span>
                     </button>
                   </DropdownMenuTrigger>
@@ -472,13 +501,15 @@ const Leads = () => {
                           }}
                         >
                           <span
-                            className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[col.statusKey] ?? ""}`}
+                            className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                              statusStyles[col.statusKey] ?? ""
+                            }`}
                           >
-                            {col.name}
+                            {getLeadStatusLabel(col.statusKey)}
                           </span>
                           {isCurrent && (
                             <span className="text-[10px] text-muted-foreground ml-1">
-                              (current)
+                              {t("leads.statusCurrent")}
                             </span>
                           )}
                         </DropdownMenuItem>
@@ -488,12 +519,16 @@ const Leads = () => {
                 </DropdownMenu>
               </div>
               <p>
-                <span className="font-medium text-muted-foreground">Source</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.source")}
+                </span>
                 <br />
                 {selectedLead.source}
               </p>
               <p>
-                <span className="font-medium text-muted-foreground">Date</span>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.date")}
+                </span>
                 <br />
                 {selectedLead.date}
               </p>
@@ -505,15 +540,17 @@ const Leads = () => {
       <AlertDialog open={!!leadToDelete} onOpenChange={(open) => !open && setLeadToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete lead</AlertDialogTitle>
+            <AlertDialogTitle>{t("leads.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {leadToDelete?.name}? This cannot be undone.
+              {leadToDelete
+                ? t("leads.deleteDescription", { name: leadToDelete.name })
+                : null}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("leads.deleteCancel")}</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Delete
+              {t("leads.deleteConfirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

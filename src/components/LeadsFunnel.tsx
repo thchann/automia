@@ -14,6 +14,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { Plus } from "lucide-react";
 import { LeadCardContent } from "@/components/LeadCard";
 import type { Lead, FunnelColumn } from "@/pages/Leads";
+import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 type StatusStyles = Record<string, string>;
 
@@ -69,6 +71,7 @@ function FunnelColumnHeader({
   onRemove: (id: string) => void;
   canRemove: boolean;
 }) {
+  const { t } = useLanguage();
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(column.name);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -83,6 +86,17 @@ function FunnelColumnHeader({
   React.useEffect(() => {
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);
+
+  const statusLabelKey: Record<string, string> = {
+    New: "status.new",
+    Contacted: "status.contacted",
+    Qualified: "status.qualified",
+  };
+
+  const displayName =
+    statusLabelKey[column.statusKey] !== undefined
+      ? t(statusLabelKey[column.statusKey])
+      : column.name;
 
   return (
     <div className="flex items-center justify-between gap-2 mb-3">
@@ -102,7 +116,7 @@ function FunnelColumnHeader({
           onClick={() => setIsEditing(true)}
           className="text-left font-semibold text-sm text-foreground pb-1 border-b border-transparent hover:border-border"
         >
-          {column.name}
+          {displayName}
         </button>
       )}
       {canRemove && (
@@ -111,7 +125,7 @@ function FunnelColumnHeader({
           onClick={() => onRemove(column.id)}
           className="text-xs text-muted-foreground hover:text-destructive"
         >
-          Remove
+          {t("funnel.remove")}
         </button>
       )}
     </div>
@@ -137,6 +151,8 @@ export function LeadsFunnel({
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const justDraggedRef = useRef(false);
+  const { toast } = useToast();
+  const { t } = useLanguage();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -194,6 +210,14 @@ export function LeadsFunnel({
   const handleRemoveColumn = (id: string) => {
     const col = columns.find((c) => c.id === id);
     if (!col) return;
+    const hasLeads = leads.some((l) => l.status === col.statusKey);
+    if (hasLeads) {
+      toast({
+        title: t("funnel.cannotDeleteColumn.title"),
+        description: t("funnel.cannotDeleteColumn.description"),
+      });
+      return;
+    }
     const firstStatus = columns[0]?.statusKey;
     if (firstStatus) {
       leads.forEach((l) => {
@@ -244,7 +268,7 @@ export function LeadsFunnel({
           className="flex-shrink-0 w-64 border-2 border-dashed border-border flex items-center justify-center gap-2 text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
         >
           <Plus className="h-4 w-4" />
-          Add column
+          {t("funnel.addColumn")}
         </button>
       </div>
       <DragOverlay>

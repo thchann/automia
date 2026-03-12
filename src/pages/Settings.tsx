@@ -2,6 +2,7 @@ import { User, Instagram, Moon } from "lucide-react";
 import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/components/ThemeProvider";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 // Settings page manages basic account/profile preferences.
 // Form fields are currently local state; in a real app, values would be
@@ -11,11 +12,12 @@ const SettingsPage = () => {
   const [email, setEmail] = useState("alex@carsalesai.com");
   const [phone, setPhone] = useState("(555) 123-4567");
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Settings</h1>
-      <p className="text-muted-foreground mt-1">Manage your account and preferences.</p>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("settings.title")}</h1>
+      <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
 
       <div className="bg-card rounded-xl shadow-sm border border-border mt-6 md:mt-8">
         <div className="p-4 md:p-6 flex items-center gap-3 border-b border-border">
@@ -23,13 +25,17 @@ const SettingsPage = () => {
             <User className="h-5 w-5 text-muted-foreground" />
           </div>
           <div>
-            <h2 className="font-bold text-card-foreground">Profile</h2>
-            <p className="text-sm text-muted-foreground">Manage your personal information</p>
+            <h2 className="font-bold text-card-foreground">{t("settings.profile.title")}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t("settings.profile.subtitle")}
+            </p>
           </div>
         </div>
         <div className="p-4 md:p-6 space-y-5">
           <div>
-            <label className="block text-sm font-medium text-card-foreground mb-1.5">Full Name</label>
+            <label className="block text-sm font-medium text-card-foreground mb-1.5">
+              {t("settings.profile.fullName")}
+            </label>
             <input
               type="text"
               value={name}
@@ -38,7 +44,9 @@ const SettingsPage = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-card-foreground mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-card-foreground mb-1.5">
+              {t("settings.profile.email")}
+            </label>
             <input
               type="email"
               value={email}
@@ -47,7 +55,9 @@ const SettingsPage = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-card-foreground mb-1.5">Phone</label>
+            <label className="block text-sm font-medium text-card-foreground mb-1.5">
+              {t("settings.profile.phone")}
+            </label>
             <input
               type="tel"
               value={phone}
@@ -56,7 +66,7 @@ const SettingsPage = () => {
             />
           </div>
           <button className="bg-primary text-primary-foreground px-5 py-3 min-h-11 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
-            Save Changes
+            {t("settings.profile.save")}
           </button>
         </div>
       </div>
@@ -67,31 +77,62 @@ const SettingsPage = () => {
             <Moon className="h-5 w-5 text-muted-foreground" />
           </div>
           <div className="flex-1">
-            <h2 className="font-bold text-card-foreground">Appearance</h2>
+            <h2 className="font-bold text-card-foreground">
+              {t("settings.appearance.title")}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Toggle dark mode to reverse the app colors for low-light environments.
+              {t("settings.appearance.subtitle")}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Light</span>
+            <span className="text-xs text-muted-foreground">
+              {t("settings.appearance.light")}
+            </span>
             <Switch
               checked={theme === "dark"}
               onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
               aria-label="Toggle dark mode"
             />
-            <span className="text-xs text-muted-foreground">Dark</span>
+            <span className="text-xs text-muted-foreground">
+              {t("settings.appearance.dark")}
+            </span>
           </div>
         </div>
       </div>
 
       <div className="bg-card rounded-xl shadow-sm border border-border mt-6">
         <div className="p-4 md:p-6 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-[hsl(var(--metric-purple-bg))] flex items-center justify-center">
-            <Instagram className="h-5 w-5 text-[hsl(var(--metric-purple))]" />
+          <div className="flex-1">
+            <h2 className="font-bold text-card-foreground">
+              {t("settings.language.title")}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {t("settings.language.subtitle")}
+            </p>
           </div>
-          <div>
-            <h2 className="font-bold text-card-foreground">Instagram Connection</h2>
-            <p className="text-sm text-muted-foreground">Connect your Instagram account for automations</p>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setLanguage("en")}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border ${
+                language === "en"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background text-muted-foreground border-border"
+              }`}
+            >
+              {t("settings.language.english")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage("es")}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border ${
+                language === "es"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background text-muted-foreground border-border"
+              }`}
+            >
+              {t("settings.language.spanish")}
+            </button>
           </div>
         </div>
       </div>
