@@ -53,7 +53,7 @@ export function AppSidebar() {
               "flex md:hidden md:group-data-[state=expanded]:flex",
             )}
           >
-            <span className="truncate text-lg font-bold text-foreground tracking-tight">
+            <span className="app-logo truncate text-lg font-bold text-foreground tracking-tight">
               Automia
             </span>
           </div>
@@ -61,7 +61,7 @@ export function AppSidebar() {
 
         {/* Desktop-only expanded header: title on the left, toggle on the right. */}
         <div className="hidden items-center justify-between px-3 py-4 md:group-data-[state=expanded]/sidebar:flex">
-          <span className="truncate text-lg font-bold text-foreground tracking-tight">
+          <span className="app-logo truncate text-lg font-bold text-foreground tracking-tight">
             Automia
           </span>
           <SidebarTrigger className="h-8 w-8 md:inline-flex" aria-label="Toggle sidebar" />
