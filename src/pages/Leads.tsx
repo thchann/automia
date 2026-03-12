@@ -16,6 +16,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { LeadCard } from "@/components/LeadCard";
 import { LeadsFunnel } from "@/components/LeadsFunnel";
 
@@ -191,6 +197,11 @@ const Leads = () => {
     setLeads((prev) =>
       prev.map((l) => (l.id === leadId ? { ...l, status: newStatusKey } : l))
     );
+  };
+
+  const handleChangeStatusFromDialog = (leadId: string, newStatus: string) => {
+    handleLeadStatusChange(leadId, newStatus);
+    setSelectedLead(null);
   };
 
   const handleColumnsChange = (columns: FunnelColumn[]) => {
@@ -490,13 +501,80 @@ const Leads = () => {
           </DialogHeader>
           {selectedLead && (
             <div className="grid gap-3 text-sm">
-              <p><span className="font-medium text-muted-foreground">Name</span><br />{selectedLead.name}</p>
-              <p><span className="font-medium text-muted-foreground">Instagram</span><br />{selectedLead.instagram}</p>
-              <p><span className="font-medium text-muted-foreground">Phone</span><br />{selectedLead.phone}</p>
-              <p><span className="font-medium text-muted-foreground">Interested car</span><br />{selectedLead.car}</p>
-              <p><span className="font-medium text-muted-foreground">Status</span><br /><span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[selectedLead.status]}`}>{selectedLead.status}</span></p>
-              <p><span className="font-medium text-muted-foreground">Source</span><br />{selectedLead.source}</p>
-              <p><span className="font-medium text-muted-foreground">Date</span><br />{selectedLead.date}</p>
+              <p>
+                <span className="font-medium text-muted-foreground">Name</span>
+                <br />
+                {selectedLead.name}
+              </p>
+              <p>
+                <span className="font-medium text-muted-foreground">Instagram</span>
+                <br />
+                {selectedLead.instagram}
+              </p>
+              <p>
+                <span className="font-medium text-muted-foreground">Phone</span>
+                <br />
+                {selectedLead.phone}
+              </p>
+              <p>
+                <span className="font-medium text-muted-foreground">Interested car</span>
+                <br />
+                {selectedLead.car}
+              </p>
+              <div>
+                <span className="font-medium text-muted-foreground">Status</span>
+                <br />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="mt-1 inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium border border-border bg-card hover:bg-muted transition-colors"
+                    >
+                      <span className={`px-2 py-0.5 rounded-full ${statusStyles[selectedLead.status] ?? ""}`}>
+                        {selectedLead.status}
+                      </span>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="min-w-[180px]">
+                    {funnelColumns.map((col) => {
+                      const isCurrent = col.statusKey === selectedLead.status;
+                      return (
+                        <DropdownMenuItem
+                          key={col.id}
+                          className="flex items-center gap-2"
+                          disabled={isCurrent}
+                          onClick={() => {
+                            if (!isCurrent) {
+                              handleChangeStatusFromDialog(selectedLead.id, col.statusKey);
+                            }
+                          }}
+                        >
+                          <span
+                            className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[col.statusKey] ?? ""}`}
+                          >
+                            {col.name}
+                          </span>
+                          {isCurrent && (
+                            <span className="text-[10px] text-muted-foreground ml-1">
+                              (current)
+                            </span>
+                          )}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <p>
+                <span className="font-medium text-muted-foreground">Source</span>
+                <br />
+                {selectedLead.source}
+              </p>
+              <p>
+                <span className="font-medium text-muted-foreground">Date</span>
+                <br />
+                {selectedLead.date}
+              </p>
             </div>
           )}
         </DialogContent>
