@@ -221,7 +221,7 @@ const Cars = () => {
             </details>
           </div>
         </div>
-        <button className="ml-4 px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+        <button className="ml-4 px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 border border-border hover:opacity-90 transition-opacity">
           <Plus className="h-4 w-4" />
           Add Car
         </button>

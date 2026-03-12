@@ -363,7 +363,7 @@ const Leads = () => {
         <button
           type="button"
           onClick={handleGenerateLead}
-          className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+          className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm border border-border hover:opacity-90 transition-opacity"
         >
           <Plus className="h-4 w-4" />
           Generate lead
