@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Dashboard from "./pages/Dashboard";
 import Cars from "./pages/Cars";
 import Leads from "./pages/Leads";
@@ -19,27 +20,29 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      {/* Shadcn-style toasts driven by the custom useToast hook */}
-      <Toaster />
-      {/* Sonner-style toasts themed via next-themes */}
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Redirect root to the main dashboard */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          {/* All primary routes share the AppLayout shell (sidebar + content area) */}
-          <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/cars" element={<Cars />} />
-            <Route path="/leads" element={<Leads />} />
-            <Route path="/automations" element={<Automations />} />
-            <Route path="/ai-assistant" element={<AIAssistant />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Route>
-          {/* Catch-all 404 route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <ThemeProvider>
+        {/* Shadcn-style toasts driven by the custom useToast hook */}
+        <Toaster />
+        {/* Sonner-style toasts themed via next-themes */}
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Redirect root to the main dashboard */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* All primary routes share the AppLayout shell (sidebar + content area) */}
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/cars" element={<Cars />} />
+              <Route path="/leads" element={<Leads />} />
+              <Route path="/automations" element={<Automations />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Route>
+            {/* Catch-all 404 route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
