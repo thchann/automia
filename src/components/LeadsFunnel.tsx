@@ -171,9 +171,24 @@ export function LeadsFunnel({
   };
 
   const handleRenameColumn = (id: string, name: string) => {
+    const col = columns.find((c) => c.id === id);
+    if (!col) return;
+    const oldStatusKey = col.statusKey;
+    const newName = name.trim() || col.name;
+
+    // Update column name and statusKey together so future drops use the label.
     onColumnsChange(
-      columns.map((c) => (c.id === id ? { ...c, name } : c))
+      columns.map((c) =>
+        c.id === id ? { ...c, name: newName, statusKey: newName } : c
+      )
     );
+
+    // Update all leads currently in this column to use the new status label.
+    leads.forEach((lead) => {
+      if (lead.status === oldStatusKey) {
+        onLeadStatusChange(lead.id, newName);
+      }
+    });
   };
 
   const handleRemoveColumn = (id: string) => {
@@ -190,9 +205,14 @@ export function LeadsFunnel({
 
   const handleAddColumn = () => {
     const num = columns.length + 1;
+    const name = `Column ${num}`;
     onColumnsChange([
       ...columns,
-      { id: `col-new-${Date.now()}`, name: `Column ${num}`, statusKey: `custom-${Date.now()}` },
+      {
+        id: `col-new-${Date.now()}`,
+        name,
+        statusKey: name,
+      },
     ]);
   };
 
