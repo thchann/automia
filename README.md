@@ -70,12 +70,36 @@ At a high level:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+This project is deployed as a static Vite + React single-page app.
 
-## Can I connect a custom domain to my Lovable project?
+- **Build**: `npm run build` (outputs to the `dist` directory).
+- **Preview locally**: `npm run preview`.
 
-Yes, you can!
+### Deploying to Vercel
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This repo includes a `vercel.json` configured for SPA-style routing:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```json
+{
+  "version": 2,
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
+
+- Vercel serves real static files from `dist` (e.g. `/assets/*`, `/Otto_Logo.png`) first.
+- Any other path (like `/dashboard`, `/cars`, `/leads`) is rewritten to `/index.html`, where React Router’s `BrowserRouter` takes over.
+
+To deploy:
+
+1. Create a new Vercel project and connect this repository.
+2. Set **Build Command** to `npm run build`.
+3. Set **Output Directory** to `dist`.
+4. Use the “Vite” or “Other” framework preset (not Next.js).
+
+After deployment, direct navigation to routes such as `/dashboard` or `/leads` should no longer show a Vercel 404, but instead load the SPA and render the correct page.
