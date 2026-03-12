@@ -6,8 +6,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Lead } from "@/pages/Leads";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 export type StatusStyles = Record<string, string>;
+
+const LEAD_STATUS_LABEL_KEY: Record<string, string> = {
+  New: "status.new",
+  Contacted: "status.contacted",
+  Qualified: "status.qualified",
+};
 
 type LeadTableColumnKey =
   | "name"
@@ -42,6 +49,9 @@ export function LeadCardContent({
   onDelete: (lead: Lead) => void;
   compact: boolean;
 }) {
+  const { t } = useLanguage();
+  const statusLabel = t(LEAD_STATUS_LABEL_KEY[lead.status] ?? lead.status);
+
   const actions = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
@@ -55,9 +65,11 @@ export function LeadCardContent({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-        <DropdownMenuItem onClick={() => onEdit(lead)}>Edit lead</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onEdit(lead)}>
+          {t("leads.actions.edit")}
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onDelete(lead)} className="text-destructive focus:text-destructive">
-          Delete lead
+          {t("leads.actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -69,8 +81,8 @@ export function LeadCardContent({
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-card-foreground truncate">{lead.name}</p>
           <p className="text-xs text-muted-foreground truncate mt-0.5">{lead.car}</p>
-          <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full mt-1 ${statusStyles[lead.status] ?? ""}`}>
-            {lead.status}
+        <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full mt-1 ${statusStyles[lead.status] ?? ""}`}>
+          {statusLabel}
           </span>
         </div>
         {actions}
@@ -86,7 +98,9 @@ export function LeadCardContent({
         <p className="text-xs text-muted-foreground mt-1">{lead.source} · {lead.date}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
+        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>
+          {statusLabel}
+        </span>
         {actions}
       </div>
     </div>
@@ -94,6 +108,8 @@ export function LeadCardContent({
 }
 
 export function LeadCard({ lead, statusStyles, onEdit, onDelete, variant, onLeadClick }: LeadCardProps) {
+  const { t } = useLanguage();
+
   if (variant === "row") {
     const columns: LeadTableColumnKey[] =
       (Array.isArray((arguments[0] as LeadCardProps).visibleColumns) &&
@@ -143,7 +159,9 @@ export function LeadCard({ lead, statusStyles, onEdit, onDelete, variant, onLead
           if (col === "status") {
             return (
               <td key={col} className="px-4 md:px-6 py-3 md:py-4">
-                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>{lead.status}</span>
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>
+                  {t(LEAD_STATUS_LABEL_KEY[lead.status] ?? lead.status)}
+                </span>
               </td>
             );
           }
@@ -171,12 +189,14 @@ export function LeadCard({ lead, statusStyles, onEdit, onDelete, variant, onLead
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => onEdit(lead)}>Edit lead</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onEdit(lead)}>
+                      {t("leads.actions.edit")}
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => onDelete(lead)}
                       className="text-destructive focus:text-destructive"
                     >
-                      Delete lead
+                      {t("leads.actions.delete")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

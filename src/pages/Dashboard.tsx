@@ -1,13 +1,14 @@
 import { Car, TrendingUp, Users, Zap } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 // Dashboard shows a high-level overview: metric cards and recent leads.
 // All data is currently static sample data and can be replaced with API-backed
 // React Query hooks in the future.
 const metrics = [
-  { icon: Car, value: "24", label: "Active Cars", colorClass: "metric-blue" },
-  { icon: TrendingUp, value: "8", label: "New Leads Today", colorClass: "metric-green" },
-  { icon: Users, value: "142", label: "Total Leads", colorClass: "metric-purple" },
-  { icon: Zap, value: "3", label: "Automations Active", colorClass: "metric-orange" },
+  { icon: Car, value: "24", labelKey: "dashboard.metrics.activeCars", colorClass: "metric-blue" },
+  { icon: TrendingUp, value: "8", labelKey: "dashboard.metrics.newLeadsToday", colorClass: "metric-green" },
+  { icon: Users, value: "142", labelKey: "dashboard.metrics.totalLeads", colorClass: "metric-purple" },
+  { icon: Zap, value: "3", labelKey: "dashboard.metrics.automationsActive", colorClass: "metric-orange" },
 ];
 
 const leads = [
@@ -31,21 +32,29 @@ const metricIconStyles: Record<string, { bg: string; text: string }> = {
 };
 
 const Dashboard = () => {
+  const { t } = useLanguage();
+
+  const leadStatusLabelKey: Record<string, string> = {
+    New: "status.new",
+    Contacted: "status.contacted",
+    Qualified: "status.qualified",
+  };
+
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Dashboard</h1>
-      <p className="text-muted-foreground mt-1">Welcome back! Here's your overview.</p>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("dashboard.title")}</h1>
+      <p className="text-muted-foreground mt-1">{t("dashboard.subtitle")}</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
         {metrics.map((m) => {
           const styles = metricIconStyles[m.colorClass];
           return (
-            <div key={m.label} className="bg-card rounded-xl p-5 shadow-sm border border-border">
+            <div key={m.labelKey} className="bg-card rounded-xl p-5 shadow-sm border border-border">
               <div className={`h-10 w-10 rounded-lg ${styles.bg} flex items-center justify-center mb-4`}>
                 <m.icon className={`h-5 w-5 ${styles.text}`} />
               </div>
               <p className="text-3xl font-bold text-card-foreground">{m.value}</p>
-              <p className="text-sm text-muted-foreground mt-1">{m.label}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t(m.labelKey)}</p>
             </div>
           );
         })}
@@ -53,17 +62,29 @@ const Dashboard = () => {
 
       <div className="bg-card rounded-xl shadow-sm border border-border mt-8">
         <div className="p-4 md:p-6 pb-4">
-          <h2 className="text-lg md:text-xl font-bold text-card-foreground">Recent Leads</h2>
+          <h2 className="text-lg md:text-xl font-bold text-card-foreground">
+            {t("dashboard.recentLeads")}
+          </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-t border-border">
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Name</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Interested Car</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Source</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Status</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">Date</th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                  {t("dashboard.table.name")}
+                </th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                  {t("dashboard.table.car")}
+                </th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                  {t("dashboard.table.source")}
+                </th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                  {t("dashboard.table.status")}
+                </th>
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                  {t("dashboard.table.date")}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -73,9 +94,13 @@ const Dashboard = () => {
                   <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.car}</td>
                   <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.source}</td>
                   <td className="px-4 md:px-6 py-3 md:py-4">
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[lead.status]}`}>
-                      {lead.status}
-                    </span>
+                <span
+                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                    statusStyles[lead.status]
+                  }`}
+                >
+                  {t(leadStatusLabelKey[lead.status] ?? lead.status)}
+                </span>
                   </td>
                   <td className="px-4 md:px-6 py-3 md:py-4 text-sm text-muted-foreground">{lead.date}</td>
                 </tr>

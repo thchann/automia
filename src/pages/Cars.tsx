@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, MoreVertical } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageProvider";
 import carTesla from "@/assets/car-tesla.jpg";
 import carBmw from "@/assets/car-bmw.jpg";
 import carPorsche from "@/assets/car-porsche.jpg";
@@ -103,6 +104,16 @@ const Cars = () => {
     return "asc";
   });
 
+  const { t } = useLanguage();
+
+  const localizedColumns = carColumns.map((c) => {
+    const key = `cars.column.${c.key}`;
+    return {
+      ...c,
+      label: t(key),
+    };
+  });
+
   useEffect(() => {
     localStorage.setItem(CARS_VISIBLE_COLUMNS_KEY, JSON.stringify(visibleColumns));
   }, [visibleColumns]);
@@ -126,7 +137,7 @@ const Cars = () => {
     }
   };
 
-  const orderedColumns = carColumns.filter((c) => visibleColumns.includes(c.key));
+  const orderedColumns = localizedColumns.filter((c) => visibleColumns.includes(c.key));
 
   const sortedCars = (() => {
     let result = [...cars];
@@ -172,8 +183,8 @@ const Cars = () => {
   return (
     <div>
       <div className="mb-4 md:mb-6 text-left">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Cars</h1>
-        <p className="text-muted-foreground mt-1">Manage your inventory and client vehicles.</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("cars.title")}</h1>
+        <p className="text-muted-foreground mt-1">{t("cars.subtitle")}</p>
       </div>
 
       {/* Search + filters + primary action row (same layout on mobile & desktop) */}
@@ -181,18 +192,20 @@ const Cars = () => {
         <div className="flex items-center gap-4">
           <input
             type="text"
-            placeholder="Search cars..."
+            placeholder={t("cars.searchPlaceholder")}
             className="w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           />
           <div className="flex items-center gap-2 text-xs">
             <details className="relative">
               <summary className="list-none cursor-pointer rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
-                Filters
+                {t("cars.filters")}
               </summary>
               <div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">Visible columns</p>
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  {t("cars.visibleColumns")}
+                </p>
                 <div className="flex flex-col space-y-1 max-h-40 overflow-auto mb-1">
-                  {carColumns.map((col) => (
+                  {localizedColumns.map((col) => (
                     <label
                       key={col.key}
                       className="flex w-full items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted transition-colors"
@@ -223,7 +236,7 @@ const Cars = () => {
         </div>
         <button className="ml-4 px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 border border-border hover:opacity-90 transition-opacity">
           <Plus className="h-4 w-4" />
-          Add Car
+          {t("cars.addCar")}
         </button>
       </div>
       {/* Table layout for all breakpoints (Google Sheets style), with horizontal scroll on small screens */}
@@ -303,14 +316,42 @@ const Cars = () => {
                   if (col.key === "owner") {
                     return (
                       <td key={col.key} className="px-4 md:px-6 py-3 md:py-4">
-                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${ownerStyles[car.owner]}`}>{car.owner}</span>
+                        <span
+                          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                            ownerStyles[car.owner]
+                          }`}
+                        >
+                          {t(
+                            car.owner === "Owned"
+                              ? "owner.owned"
+                              : car.owner === "Client"
+                              ? "owner.client"
+                              : car.owner === "Advisory"
+                              ? "owner.advisory"
+                              : car.owner,
+                          )}
+                        </span>
                       </td>
                     );
                   }
                   if (col.key === "status") {
                     return (
                       <td key={col.key} className="px-4 md:px-6 py-3 md:py-4">
-                        <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${statusStyles[car.status]}`}>{car.status}</span>
+                        <span
+                          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                            statusStyles[car.status]
+                          }`}
+                        >
+                          {t(
+                            car.status === "Available"
+                              ? "status.available"
+                              : car.status === "Pending"
+                              ? "status.pending"
+                              : car.status === "Sold"
+                              ? "status.sold"
+                              : car.status,
+                          )}
+                        </span>
                       </td>
                     );
                   }
