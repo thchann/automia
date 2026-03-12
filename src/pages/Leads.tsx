@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import {
   Dialog,
@@ -24,8 +24,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LeadCard } from "@/components/LeadCard";
 import { LeadsFunnel } from "@/components/LeadsFunnel";
-
-const VIEW_LABELS_KEY = "leads-view-labels";
 
 // Leads page tracks potential customers and their interest in cars.
 // Static seed data is used for now; in a real app this would come from an API
@@ -99,31 +97,12 @@ const leadColumns: LeadColumnConfig[] = [
   { key: "actions", label: "Actions" },
 ];
 
-const loadViewLabels = (): { table: string; funnel: string } => {
-  try {
-    const s = localStorage.getItem(VIEW_LABELS_KEY);
-    if (s) {
-      const parsed = JSON.parse(s) as { table?: string; funnel?: string };
-      return { table: parsed.table ?? "Table", funnel: parsed.funnel ?? "Funnel" };
-    }
-  } catch {
-    // ignore
-  }
-  return { table: "Table", funnel: "Funnel" };
-};
-
 const Leads = () => {
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
   const [view, setView] = useState<"table" | "funnel">("table");
   const [funnelColumns, setFunnelColumns] = useState<FunnelColumn[]>(defaultFunnelColumns);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
-  const [tableLabel, setTableLabel] = useState(() => loadViewLabels().table);
-  const [funnelLabel, setFunnelLabel] = useState(() => loadViewLabels().funnel);
-  const [editingTab, setEditingTab] = useState<"table" | "funnel" | null>(null);
-  const [editTabValue, setEditTabValue] = useState("");
-  const tableLabelInputRef = useRef<HTMLInputElement>(null);
-  const funnelLabelInputRef = useRef<HTMLInputElement>(null);
   const [visibleColumns, setVisibleColumns] = useState<LeadColumnKey[]>(() => {
     try {
       const stored = localStorage.getItem(LEADS_VISIBLE_COLUMNS_KEY);
@@ -166,15 +145,6 @@ const Leads = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem(VIEW_LABELS_KEY, JSON.stringify({ table: tableLabel, funnel: funnelLabel }));
-  }, [tableLabel, funnelLabel]);
-
-  useEffect(() => {
-    if (editingTab === "table") tableLabelInputRef.current?.focus();
-    else if (editingTab === "funnel") funnelLabelInputRef.current?.focus();
-  }, [editingTab]);
-
-  useEffect(() => {
     localStorage.setItem(LEADS_VISIBLE_COLUMNS_KEY, JSON.stringify(visibleColumns));
   }, [visibleColumns]);
 
@@ -206,20 +176,6 @@ const Leads = () => {
 
   const handleColumnsChange = (columns: FunnelColumn[]) => {
     setFunnelColumns(columns);
-  };
-
-  const saveTableLabel = () => {
-    const v = editTabValue.trim();
-    if (v) setTableLabel(v);
-    else setEditTabValue(tableLabel);
-    setEditingTab(null);
-  };
-
-  const saveFunnelLabel = () => {
-    const v = editTabValue.trim();
-    if (v) setFunnelLabel(v);
-    else setEditTabValue(funnelLabel);
-    setEditingTab(null);
   };
 
   const handleGenerateLead = () => {
@@ -303,62 +259,28 @@ const Leads = () => {
 
       <div className="flex items-center justify-between gap-4 mt-3">
         <div className="flex items-center gap-1">
-          {editingTab === "table" ? (
-            <input
-              ref={tableLabelInputRef}
-              type="text"
-              value={editTabValue}
-              onChange={(e) => setEditTabValue(e.target.value)}
-              onBlur={saveTableLabel}
-              onKeyDown={(e) => e.key === "Enter" && saveTableLabel()}
-              className="w-24 text-sm font-medium pb-2 -mb-px border-b-2 border-primary bg-transparent text-foreground outline-none"
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setView("table")}
-              onDoubleClick={(e) => {
-                e.preventDefault();
-                setEditingTab("table");
-                setEditTabValue(tableLabel);
-              }}
-              className={`text-sm font-medium pb-2 -mb-px border-b-2 transition-colors ${
-                view === "table"
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tableLabel}
-            </button>
-          )}
-          {editingTab === "funnel" ? (
-            <input
-              ref={funnelLabelInputRef}
-              type="text"
-              value={editTabValue}
-              onChange={(e) => setEditTabValue(e.target.value)}
-              onBlur={saveFunnelLabel}
-              onKeyDown={(e) => e.key === "Enter" && saveFunnelLabel()}
-              className="w-24 text-sm font-medium pb-2 -mb-px border-b-2 border-primary bg-transparent text-foreground outline-none ml-6"
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setView("funnel")}
-              onDoubleClick={(e) => {
-                e.preventDefault();
-                setEditingTab("funnel");
-                setEditTabValue(funnelLabel);
-              }}
-              className={`text-sm font-medium pb-2 -mb-px border-b-2 transition-colors ml-6 ${
-                view === "funnel"
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {funnelLabel}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setView("table")}
+            className={`text-sm font-medium pb-2 -mb-px border-b-2 transition-colors ${
+              view === "table"
+                ? "border-border text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+            }`}
+          >
+            Table
+          </button>
+          <button
+            type="button"
+            onClick={() => setView("funnel")}
+            className={`ml-6 text-sm font-medium pb-2 -mb-px border-b-2 transition-colors ${
+              view === "funnel"
+                ? "border-border text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+            }`}
+          >
+            Funnel
+          </button>
         </div>
         <button
           type="button"

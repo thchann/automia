@@ -100,7 +100,7 @@ function FunnelColumnHeader({
         <button
           type="button"
           onClick={() => setIsEditing(true)}
-          className="text-left font-semibold text-sm text-foreground hover:underline"
+          className="text-left font-semibold text-sm text-foreground pb-1 border-b border-transparent hover:border-border"
         >
           {column.name}
         </button>
