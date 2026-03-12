@@ -1,5 +1,7 @@
-import { User, Instagram } from "lucide-react";
+import { User, Instagram, Moon } from "lucide-react";
 import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
+import { useTheme } from "@/components/ThemeProvider";
 
 // Settings page manages basic account/profile preferences.
 // Form fields are currently local state; in a real app, values would be
@@ -8,6 +10,7 @@ const SettingsPage = () => {
   const [name, setName] = useState("Alex Johnson");
   const [email, setEmail] = useState("alex@carsalesai.com");
   const [phone, setPhone] = useState("(555) 123-4567");
+  const { theme, setTheme } = useTheme();
 
   return (
     <div>
@@ -55,6 +58,29 @@ const SettingsPage = () => {
           <button className="bg-primary text-primary-foreground px-5 py-3 min-h-11 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
             Save Changes
           </button>
+        </div>
+      </div>
+
+      <div className="bg-card rounded-xl shadow-sm border border-border mt-6">
+        <div className="p-4 md:p-6 flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
+            <Moon className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-bold text-card-foreground">Appearance</h2>
+            <p className="text-sm text-muted-foreground">
+              Toggle dark mode to reverse the app colors for low-light environments.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Light</span>
+            <Switch
+              checked={theme === "dark"}
+              onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+              aria-label="Toggle dark mode"
+            />
+            <span className="text-xs text-muted-foreground">Dark</span>
+          </div>
         </div>
       </div>
 

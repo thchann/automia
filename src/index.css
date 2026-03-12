@@ -115,6 +115,94 @@
     --status-paused-bg: 220 5% 55% / 0.15;
   }
 
+  :root.dark {
+    /* Base dark theme (rough inverse of light) */
+    --background: 220 25% 10%;
+    --foreground: 0 0% 98%;
+
+    /* Surfaces slightly lighter than background */
+    --card: 220 20% 14%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 20% 14%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Primary/secondary used mainly for accents; keep subtle fills on dark */
+    --primary: 220 20% 20%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* Muted / subtle backgrounds */
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 70%;
+
+    --accent: 220 20% 22%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders/inputs/rings suitable for dark background */
+    --border: 220 15% 26%;
+    --input: 220 15% 26%;
+    --ring: 220 15% 40%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar slightly lighter than background */
+    --sidebar-background: 220 22% 14%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 220 25% 20%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 220 20% 22%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 220 18% 26%;
+    --sidebar-ring: 220 18% 40%;
+
+    /* Floating help/cookie surfaces */
+    --help-button: 220 20% 22%;
+    --help-button-foreground: 0 0% 98%;
+    --cookie-bg: 220 20% 16%;
+    --cookie-foreground: 0 0% 96%;
+
+    /* Keep status / metric hues, adjust for dark background */
+    --status-new: 200 80% 60%;
+    --status-new-bg: 200 80% 60% / 0.25;
+    --status-contacted: 45 90% 60%;
+    --status-contacted-bg: 45 90% 60% / 0.25;
+    --status-qualified: 145 70% 55%;
+    --status-qualified-bg: 145 70% 55% / 0.25;
+
+    --metric-blue: 215 80% 65%;
+    --metric-blue-bg: 215 80% 65% / 0.2;
+    --metric-green: 145 70% 55%;
+    --metric-green-bg: 145 70% 55% / 0.2;
+    --metric-purple: 270 70% 70%;
+    --metric-purple-bg: 270 70% 70% / 0.2;
+    --metric-orange: 25 90% 60%;
+    --metric-orange-bg: 25 90% 60% / 0.2;
+
+    --owner-owned: 215 80% 65%;
+    --owner-owned-bg: 215 80% 65% / 0.25;
+    --owner-client: 270 70% 70%;
+    --owner-client-bg: 270 70% 70% / 0.25;
+    --owner-advisory: 145 70% 55%;
+    --owner-advisory-bg: 145 70% 55% / 0.25;
+
+    --status-available: 145 70% 55%;
+    --status-available-bg: 145 70% 55% / 0.25;
+    --status-pending: 45 90% 60%;
+    --status-pending-bg: 45 90% 60% / 0.25;
+    --status-sold: 220 10% 70%;
+    --status-sold-bg: 220 10% 70% / 0.25;
+
+    --status-active: 145 70% 55%;
+    --status-active-bg: 145 70% 55% / 0.25;
+    --status-paused: 220 10% 70%;
+    --status-paused-bg: 220 10% 70% / 0.25;
+  }
 }
 
 @layer base {
