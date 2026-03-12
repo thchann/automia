@@ -176,16 +176,13 @@ const Cars = () => {
         <p className="text-muted-foreground mt-1">Manage your inventory and client vehicles.</p>
       </div>
 
-      {/* Search + filters + primary action row */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4">
+      {/* Search + filters + primary action row (same layout on mobile & desktop) */}
+      <div className="flex items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-4">
           <input
             type="text"
-            // Search is not wired yet; placeholder for future behavior.
-            // value={searchQuery}
-            // onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search cars..."
-            className="w-full md:max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           />
           <div className="flex items-center gap-2 text-xs">
             <details className="relative">
@@ -224,12 +221,11 @@ const Cars = () => {
             </details>
           </div>
         </div>
-        <button className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 min-h-11 rounded-lg font-medium text-sm hover:opacity-90 transition-opacity w-full md:w-auto">
+        <button className="ml-4 px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
           <Plus className="h-4 w-4" />
           Add Car
         </button>
       </div>
-
       {/* Table layout for all breakpoints (Google Sheets style), with horizontal scroll on small screens */}
       <div className="bg-card rounded-xl shadow-sm border border-border overflow-x-auto">
         <table className="w-full min-w-[700px]">
