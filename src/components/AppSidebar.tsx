@@ -79,15 +79,16 @@ export function AppSidebar() {
                         asChild
                         size="lg"
                         className={cn(
-                          // Keep row hit-area but prevent row-wide hover/active bg.
-                          // Spacing between icon and title is controlled by gap-1.5 on the inner row.
-                          "h-8 w-full justify-start px-0 bg-transparent hover:bg-transparent",
+                          // Full-row hit area; when sidebar is expanded on desktop, hover the entire row
+                          // (icon + label) instead of just the icon chip.
+                          "h-8 w-full justify-start px-0 bg-transparent",
+                          "md:group-data-[state=expanded]/sidebar:hover:bg-sidebar-accent/40",
                           "group-data-[state=collapsed]:!h-8 group-data-[state=collapsed]:!w-full",
                         )}
                       >
                         <NavLink
                           to={item.url}
-                          className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden text-sidebar-foreground transition-colors"
+                          className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden text-sidebar-foreground transition-colors group-hover/nav-item:text-sidebar-accent-foreground"
                           activeClassName="font-medium text-foreground"
                         >
                           <span
