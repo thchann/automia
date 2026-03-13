@@ -183,7 +183,7 @@ const Cars = () => {
   return (
     <div>
       <div className="mb-4 md:mb-6 text-left">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("cars.title")}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("cars.title")}</h1>
         <p className="text-muted-foreground mt-1">{t("cars.subtitle")}</p>
       </div>
 

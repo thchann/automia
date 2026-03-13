@@ -19,6 +19,15 @@
   font-display: swap;
 }
 
+/* Codec Cold – title font */
+@font-face {
+  font-family: "Codec Cold";
+  src: url("/fonts/Codec-Cold-Regular-trial.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Design system tokens.
    All semantic colors (backgrounds, text, status badges, metrics, etc.) are
    defined as HSL variables here and then mapped to Tailwind utilities in
@@ -216,5 +225,16 @@
 
   .app-logo {
     font-family: "Amazing Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .font-title {
+    font-family: "Codec Cold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Codec Cold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 }

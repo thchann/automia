@@ -6,7 +6,7 @@ const Index = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">{t("index.title")}</h1>
+        <h1 className="mb-4 text-4xl font-bold font-title">{t("index.title")}</h1>
         <p className="text-xl text-muted-foreground">{t("index.subtitle")}</p>
       </div>
     </div>

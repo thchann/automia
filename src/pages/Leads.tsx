@@ -271,7 +271,7 @@ const Leads = () => {
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("leads.title")}</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("leads.title")}</h1>
       <p className="text-muted-foreground mt-1">{t("leads.subtitle")}</p>
 
       <div className="flex items-center justify-between gap-4 mt-3">

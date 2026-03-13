@@ -64,7 +64,7 @@ export function AppSidebar() {
 
         {/* Desktop-only expanded header: title on the left, toggle on the right. */}
         <div className="hidden items-center justify-between px-3 py-4 md:group-data-[state=expanded]/sidebar:flex">
-          <span className="app-logo truncate text-lg font-bold text-foreground tracking-tight">
+          <span className="app-logo font-title truncate text-lg font-bold text-foreground tracking-tight">
             Automia
           </span>
           <SidebarTrigger className="h-8 w-8 md:inline-flex" aria-label="Toggle sidebar" />
@@ -113,7 +113,7 @@ export function AppSidebar() {
                             className={cn(
                               // On mobile, always show titles when the sheet is open.
                               // On desktop, only show when the sidebar is expanded.
-                              "min-w-0 flex-1 truncate pr-3 text-sm flex md:hidden",
+                              "min-w-0 flex-1 truncate pr-3 text-sm flex md:hidden font-title",
                               "md:group-data-[state=expanded]:inline-block",
                             )}
                           >

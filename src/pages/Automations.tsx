@@ -51,7 +51,7 @@ const Automations = () => {
   const { t } = useLanguage();
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">
         {t("automations.title")}
       </h1>
       <p className="text-muted-foreground mt-1">{t("automations.subtitle")}</p>
