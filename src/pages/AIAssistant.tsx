@@ -15,7 +15,7 @@ const AIAssistant = () => {
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-1">
         <Sparkles className="h-6 w-6 md:h-7 md:w-7 text-[hsl(var(--metric-purple))]" />
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">
           {t("ai.title")}
         </h1>
       </div>

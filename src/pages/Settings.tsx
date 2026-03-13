@@ -16,7 +16,7 @@ const SettingsPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t("settings.title")}</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("settings.title")}</h1>
       <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
 
       <div className="bg-card rounded-xl shadow-sm border border-border mt-6 md:mt-8">
@@ -96,6 +96,22 @@ const SettingsPage = () => {
             <span className="text-xs text-muted-foreground">
               {t("settings.appearance.dark")}
             </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-card rounded-xl shadow-sm border border-border mt-6">
+        <div className="p-4 md:p-6 flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg bg-[hsl(var(--metric-purple-bg))] flex items-center justify-center">
+            <Instagram className="h-5 w-5 text-[hsl(var(--metric-purple))]" />
+          </div>
+          <div>
+            <h2 className="font-bold text-card-foreground">
+              {t("settings.instagram.title")}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {t("settings.instagram.subtitle")}
+            </p>
           </div>
         </div>
       </div>
