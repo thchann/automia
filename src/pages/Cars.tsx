@@ -1,6 +1,28 @@
 import { useState, useEffect } from "react";
-import { Plus, MoreVertical } from "lucide-react";
+import { Plus, MoreVertical, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import carTesla from "@/assets/car-tesla.jpg";
 import carBmw from "@/assets/car-bmw.jpg";
 import carPorsche from "@/assets/car-porsche.jpg";
@@ -23,8 +45,29 @@ const statusStyles: Record<string, string> = {
   Sold: "bg-[hsl(var(--status-sold-bg))] text-[hsl(var(--status-sold))]",
 };
 
+type CarSource = {
+  leadName: string;
+  websiteLabel: string;
+  requestedAt: string;
+  url: string;
+};
+
 const cars = [
-  { image: carTesla, make: "Tesla", model: "Model 3", year: 2024, price: "$45,990", owner: "Owned", status: "Available" },
+  {
+    image: carTesla,
+    make: "Tesla",
+    model: "Model 3",
+    year: 2024,
+    price: "$45,990",
+    owner: "Owned",
+    status: "Available",
+    source: {
+      leadName: "John Martinez",
+      websiteLabel: "Autoland Peru",
+      requestedAt: "Mar 8, 2026",
+      url: "https://www.autoland.com.pe/autos-usados-peru/T4O-046_ALP",
+    },
+  },
   { image: carBmw, make: "BMW", model: "M4", year: 2023, price: "$76,500", owner: "Client", status: "Available" },
   { image: carPorsche, make: "Porsche", model: "911", year: 2024, price: "$115,000", owner: "Advisory", status: "Pending" },
   { image: carMercedes, make: "Mercedes", model: "C-Class", year: 2023, price: "$54,500", owner: "Client", status: "Available" },
@@ -32,7 +75,7 @@ const cars = [
   { image: carLexus, make: "Lexus", model: "LC 500", year: 2023, price: "$93,975", owner: "Advisory", status: "Available" },
 ];
 
-type Car = (typeof cars)[number];
+type Car = (typeof cars)[number] & { source?: CarSource };
 
 type CarColumnKey =
   | "image"
@@ -41,6 +84,7 @@ type CarColumnKey =
   | "price"
   | "owner"
   | "status"
+  | "source"
   | "actions";
 
 type CarColumnConfig = {
@@ -59,10 +103,12 @@ const carColumns: CarColumnConfig[] = [
   { key: "price", label: "Price", sortableType: "numeric" },
   { key: "owner", label: "Owner Type", sortableType: "alpha" },
   { key: "status", label: "Status", sortableType: "alpha" },
+  { key: "source", label: "Source" },
   { key: "actions", label: "Actions" },
 ];
 
 const Cars = () => {
+  const [carsState, setCarsState] = useState<Car[]>(cars);
   const [visibleColumns, setVisibleColumns] = useState<CarColumnKey[]>(() => {
     try {
       const stored = localStorage.getItem(CARS_VISIBLE_COLUMNS_KEY);
@@ -104,6 +150,10 @@ const Cars = () => {
     return "asc";
   });
 
+  const [selectedCarSource, setSelectedCarSource] = useState<CarSource | null>(null);
+  const [carToDelete, setCarToDelete] = useState<Car | null>(null);
+  const [carToConfirmDelete, setCarToConfirmDelete] = useState<Car | null>(null);
+
   const { t } = useLanguage();
 
   const localizedColumns = carColumns.map((c) => {
@@ -140,7 +190,7 @@ const Cars = () => {
   const orderedColumns = localizedColumns.filter((c) => visibleColumns.includes(c.key));
 
   const sortedCars = (() => {
-    let result = [...cars];
+    let result = [...carsState];
 
     if (!sortKey) return result;
     const columnConfig = carColumns.find((c) => c.key === sortKey);
@@ -355,12 +405,45 @@ const Cars = () => {
                       </td>
                     );
                   }
+                  if (col.key === "source") {
+                    return (
+                      <td key={col.key} className="px-4 md:px-6 py-3 md:py-4">
+                        {car.source ? (
+                          <button
+                            type="button"
+                            className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg border border-transparent hover:border-border"
+                            aria-label={t("cars.column.source")}
+                            onClick={() => setSelectedCarSource(car.source ?? null)}
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </button>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
+                      </td>
+                    );
+                  }
                   if (col.key === "actions") {
                     return (
                       <td key={col.key} className="px-4 md:px-6 py-3 md:py-4">
-                        <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
-                          <MoreVertical className="h-5 w-5" />
-                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
+                              <MoreVertical className="h-5 w-5" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                              {t("cars.actions.edit")}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => setCarToDelete(car)}
+                              className="text-destructive focus:text-destructive"
+                            >
+                              {t("cars.actions.delete")}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </td>
                     );
                   }
@@ -371,6 +454,123 @@ const Cars = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Car source details dialog */}
+      <Dialog
+        open={!!selectedCarSource}
+        onOpenChange={(open) => {
+          if (!open) setSelectedCarSource(null);
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("cars.sourceDetailsTitle")}</DialogTitle>
+          </DialogHeader>
+          {selectedCarSource && (
+            <div className="grid gap-3 text-sm">
+              <p>
+                <span className="font-medium text-muted-foreground">
+                  {t("cars.sourceLeadName")}
+                </span>
+                <br />
+                {selectedCarSource.leadName}
+              </p>
+              <p>
+                <span className="font-medium text-muted-foreground">
+                  {t("cars.sourceWebsite")}
+                </span>
+                <br />
+                <a
+                  href={selectedCarSource.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline text-foreground hover:text-primary"
+                >
+                  {selectedCarSource.websiteLabel}
+                </a>
+              </p>
+              <p>
+                <span className="font-medium text-muted-foreground">
+                  {t("cars.sourceRequestedAt")}
+                </span>
+                <br />
+                {selectedCarSource.requestedAt}
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* First delete dialog: initial confirmation */}
+      <AlertDialog
+        open={!!carToDelete}
+        onOpenChange={(open) => {
+          if (!open) setCarToDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("cars.deleteTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("cars.deleteDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cars.deleteCancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (carToDelete) {
+                  setCarToConfirmDelete(carToDelete);
+                  setCarToDelete(null);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t("cars.deleteConfirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Second delete dialog: final irreversible confirmation */}
+      <AlertDialog
+        open={!!carToConfirmDelete}
+        onOpenChange={(open) => {
+          if (!open) setCarToConfirmDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("cars.deleteConfirmTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("cars.deleteConfirmDescription")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cars.deleteCancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (carToConfirmDelete) {
+                  setCarsState((prev) =>
+                    prev.filter(
+                      (c) =>
+                        !(
+                          c.make === carToConfirmDelete.make &&
+                          c.model === carToConfirmDelete.model &&
+                          c.year === carToConfirmDelete.year
+                        ),
+                    ),
+                  );
+                  setCarToConfirmDelete(null);
+                }
+              }}
+              className="bg-black text-destructive hover:bg-black/90"
+            >
+              Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

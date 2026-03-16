@@ -29,6 +29,7 @@ export const messages: Record<Language, Messages> = {
     "leads.filters": "Filters",
     "leads.visibleColumns": "Visible columns",
     "leads.leadDetails": "Lead details",
+    "leads.leadEdit": "Edit lead",
     "leads.status": "Status",
     "leads.source": "Source",
     "leads.date": "Date",
@@ -36,6 +37,13 @@ export const messages: Record<Language, Messages> = {
     "leads.deleteDescription": "Are you sure you want to delete {name}? This cannot be undone.",
     "leads.deleteConfirm": "Delete",
     "leads.deleteCancel": "Cancel",
+    "leads.deleteConfirmTitle": "Remove lead?",
+    "leads.deleteConfirmDescription":
+      "Are you sure you want to remove {name}? This action cannot be undone and will permanently remove this lead from the database.",
+
+    "leads.notesLabel": "Notes",
+    "leads.notesPlaceholder": "Add any extra context or notes for this lead (optional)...",
+    "leads.saveChanges": "Save changes",
 
     "settings.title": "Settings",
     "settings.subtitle": "Manage your account and preferences.",
@@ -72,6 +80,35 @@ export const messages: Record<Language, Messages> = {
     "cars.filters": "Filters",
     "cars.visibleColumns": "Visible columns",
     "cars.addCar": "Add Car",
+
+    // Cars table columns
+    "cars.column.image": "Image",
+    "cars.column.make": "Make/Model",
+    "cars.column.year": "Year",
+    "cars.column.price": "Price",
+    "cars.column.owner": "Owner Type",
+    "cars.column.status": "Status",
+    "cars.column.source": "Source",
+    "cars.column.actions": "Actions",
+
+    // Cars actions
+    "cars.actions.edit": "Edit car",
+    "cars.actions.delete": "Delete car",
+
+    // Car delete confirmations
+    "cars.deleteTitle": "Delete car",
+    "cars.deleteDescription": "Are you sure you want to delete this car? This cannot be undone.",
+    "cars.deleteConfirmTitle": "Remove car?",
+    "cars.deleteConfirmDescription":
+      "Are you sure you want to remove this car? This action cannot be undone and will permanently remove this car from the database.",
+    "cars.deleteConfirm": "Delete",
+    "cars.deleteCancel": "Cancel",
+
+    // Car source dialog
+    "cars.sourceDetailsTitle": "Source details",
+    "cars.sourceLeadName": "Lead",
+    "cars.sourceWebsite": "Website",
+    "cars.sourceRequestedAt": "Requested at",
 
     "ai.title": "AI Assistant",
     "ai.subtitle": "Ask questions about your cars, leads, and sales.",
@@ -132,15 +169,6 @@ export const messages: Record<Language, Messages> = {
     "leads.column.date": "Date",
     "leads.column.actions": "Actions",
 
-    // Cars table columns
-    "cars.column.image": "Image",
-    "cars.column.make": "Make/Model",
-    "cars.column.year": "Year",
-    "cars.column.price": "Price",
-    "cars.column.owner": "Owner Type",
-    "cars.column.status": "Status",
-    "cars.column.actions": "Actions",
-
     // Lead actions
     "leads.actions.edit": "Edit lead",
     "leads.actions.delete": "Delete lead",
@@ -176,6 +204,7 @@ export const messages: Record<Language, Messages> = {
     "leads.filters": "Filtros",
     "leads.visibleColumns": "Columnas visibles",
     "leads.leadDetails": "Detalles del lead",
+    "leads.leadEdit": "Editar lead",
     "leads.status": "Estado",
     "leads.source": "Origen",
     "leads.date": "Fecha",
@@ -183,6 +212,13 @@ export const messages: Record<Language, Messages> = {
     "leads.deleteDescription": "¿Seguro que quieres eliminar a {name}? Esta acción no se puede deshacer.",
     "leads.deleteConfirm": "Eliminar",
     "leads.deleteCancel": "Cancelar",
+    "leads.deleteConfirmTitle": "¿Eliminar lead?",
+    "leads.deleteConfirmDescription":
+      "¿Seguro que quieres eliminar a {name}? Esta acción no se puede deshacer y eliminará este lead de la base de datos de forma permanente.",
+
+    "leads.notesLabel": "Notas",
+    "leads.notesPlaceholder": "Agrega contexto adicional o notas para este lead (opcional)...",
+    "leads.saveChanges": "Guardar cambios",
 
     "settings.title": "Configuración",
     "settings.subtitle": "Administra tu cuenta y preferencias.",
@@ -220,6 +256,35 @@ export const messages: Record<Language, Messages> = {
     "cars.filters": "Filtros",
     "cars.visibleColumns": "Columnas visibles",
     "cars.addCar": "Agregar auto",
+
+    // Cars table columns
+    "cars.column.image": "Imagen",
+    "cars.column.make": "Marca/Modelo",
+    "cars.column.year": "Año",
+    "cars.column.price": "Precio",
+    "cars.column.owner": "Tipo de propietario",
+    "cars.column.status": "Estado",
+    "cars.column.source": "Origen",
+    "cars.column.actions": "Acciones",
+
+    // Cars actions
+    "cars.actions.edit": "Editar auto",
+    "cars.actions.delete": "Eliminar auto",
+
+    // Car delete confirmations
+    "cars.deleteTitle": "Eliminar auto",
+    "cars.deleteDescription": "¿Seguro que quieres eliminar este auto? Esta acción no se puede deshacer.",
+    "cars.deleteConfirmTitle": "¿Eliminar auto?",
+    "cars.deleteConfirmDescription":
+      "¿Seguro que quieres eliminar este auto? Esta acción no se puede deshacer y eliminará este auto de la base de datos de forma permanente.",
+    "cars.deleteConfirm": "Eliminar",
+    "cars.deleteCancel": "Cancelar",
+
+    // Car source dialog
+    "cars.sourceDetailsTitle": "Detalles del origen",
+    "cars.sourceLeadName": "Lead",
+    "cars.sourceWebsite": "Sitio web",
+    "cars.sourceRequestedAt": "Solicitado el",
 
     "ai.title": "Asistente de IA",
     "ai.subtitle": "Haz preguntas sobre tus autos, leads y ventas.",
@@ -283,15 +348,6 @@ export const messages: Record<Language, Messages> = {
     "leads.column.source": "Origen",
     "leads.column.date": "Fecha",
     "leads.column.actions": "Acciones",
-
-    // Cars table columns
-    "cars.column.image": "Imagen",
-    "cars.column.make": "Marca/Modelo",
-    "cars.column.year": "Año",
-    "cars.column.price": "Precio",
-    "cars.column.owner": "Tipo de propietario",
-    "cars.column.status": "Estado",
-    "cars.column.actions": "Acciones",
 
     // Lead actions
     "leads.actions.edit": "Editar lead",

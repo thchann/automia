@@ -126,7 +126,18 @@ export function LeadCard({ lead, statusStyles, onEdit, onDelete, variant, onLead
       ];
 
     return (
-      <tr className="border-t border-border">
+      <tr
+        className="border-t border-border cursor-pointer"
+        onClick={() => onLeadClick?.(lead)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onLeadClick?.(lead);
+          }
+        }}
+      >
         {columns.map((col) => {
           if (col === "name") {
             return (
@@ -183,12 +194,22 @@ export function LeadCard({ lead, statusStyles, onEdit, onDelete, variant, onLead
             return (
               <td key={col} className="px-4 md:px-6 py-3 md:py-4">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+                  <DropdownMenuTrigger
+                    asChild
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
                     <button className="min-h-9 min-w-9 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors rounded-lg">
                       <MoreVertical className="h-5 w-5" />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent
+                    align="end"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
                     <DropdownMenuItem onClick={() => onEdit(lead)}>
                       {t("leads.actions.edit")}
                     </DropdownMenuItem>
