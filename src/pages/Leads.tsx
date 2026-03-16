@@ -649,101 +649,140 @@ const Leads = () => {
           }
         }}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>{t("leads.leadEdit")}</DialogTitle>
           </DialogHeader>
           {draftLead && (
-            <div className="grid gap-3 text-sm">
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.column.name")}
-                </span>
-                <input
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.name}
-                  onChange={(e) => setDraftLead({ ...draftLead, name: e.target.value })}
-                />
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.column.instagram")}
-                </span>
-                <input
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.instagram}
-                  onChange={(e) => setDraftLead({ ...draftLead, instagram: e.target.value })}
-                />
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.column.phone")}
-                </span>
-                <input
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.phone}
-                  onChange={(e) => setDraftLead({ ...draftLead, phone: e.target.value })}
-                />
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.column.car")}
-                </span>
-                <input
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.car}
-                  onChange={(e) => setDraftLead({ ...draftLead, car: e.target.value })}
-                />
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.status")}
-                </span>
-                <select
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.status}
-                  onChange={(e) => setDraftLead({ ...draftLead, status: e.target.value })}
-                >
-                  {funnelColumns.map((col) => (
-                    <option key={col.id} value={col.statusKey}>
-                      {getLeadStatusLabel(col.statusKey)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.source")}
-                </span>
-                <input
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.source}
-                  onChange={(e) => setDraftLead({ ...draftLead, source: e.target.value })}
-                />
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.date")}
-                </span>
-                <input
-                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
-                  value={draftLead.date}
-                  onChange={(e) => setDraftLead({ ...draftLead, date: e.target.value })}
-                />
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  {t("leads.notesLabel")}
-                </span>
-                <textarea
-                  maxLength={400}
-                  value={draftLead.notes ?? ""}
-                  onChange={(e) => setDraftLead({ ...draftLead, notes: e.target.value })}
-                  placeholder={t("leads.notesPlaceholder")}
-                  className="mt-1 w-full min-h-[96px] resize-none rounded-md border border-border bg-background px-2 py-1.5 text-sm text-foreground"
-                />
-                <div className="mt-1 text-[11px] text-muted-foreground text-right">
-                  {(draftLead.notes ?? "").length}/400
+            <>
+              <div className="mt-2 flex-1 overflow-y-auto pr-1">
+                <div className="grid gap-3 text-sm pb-2">
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.column.name")}
+                    </span>
+                    <input
+                      className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                      value={draftLead.name}
+                      onChange={(e) => setDraftLead({ ...draftLead, name: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.column.instagram")}
+                    </span>
+                    <input
+                      className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                      value={draftLead.instagram}
+                      onChange={(e) => setDraftLead({ ...draftLead, instagram: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.column.phone")}
+                    </span>
+                    <input
+                      className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                      value={draftLead.phone}
+                      onChange={(e) => setDraftLead({ ...draftLead, phone: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.column.car")}
+                    </span>
+                    <input
+                      className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                      value={draftLead.car}
+                      onChange={(e) => setDraftLead({ ...draftLead, car: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <span className="block font-medium text-muted-foreground">
+                      {t("leads.status")}
+                    </span>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button
+                          type="button"
+                          className="mt-1 inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs font-medium border border-border bg-card hover:bg-muted transition-colors"
+                        >
+                          <span
+                            className={`px-2 py-0.5 rounded-full ${
+                              statusStyles[draftLead.status] ?? ""
+                            }`}
+                          >
+                            {getLeadStatusLabel(draftLead.status)}
+                          </span>
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="min-w-[180px]">
+                        {funnelColumns.map((col) => {
+                          const isCurrent = col.statusKey === draftLead.status;
+                          return (
+                            <DropdownMenuItem
+                              key={col.id}
+                              className="flex items-center gap-2"
+                              disabled={isCurrent}
+                              onClick={() => {
+                                if (!isCurrent) {
+                                  setDraftLead({ ...draftLead, status: col.statusKey });
+                                }
+                              }}
+                            >
+                              <span
+                                className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                                  statusStyles[col.statusKey] ?? ""
+                                }`}
+                              >
+                                {getLeadStatusLabel(col.statusKey)}
+                              </span>
+                              {isCurrent && (
+                                <span className="text-[10px] text-muted-foreground ml-1">
+                                  {t("leads.statusCurrent")}
+                                </span>
+                              )}
+                            </DropdownMenuItem>
+                          );
+                        })}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.source")}
+                    </span>
+                    <input
+                      className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                      value={draftLead.source}
+                      onChange={(e) => setDraftLead({ ...draftLead, source: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.date")}
+                    </span>
+                    <input
+                      className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                      value={draftLead.date}
+                      onChange={(e) => setDraftLead({ ...draftLead, date: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <span className="font-medium text-muted-foreground">
+                      {t("leads.notesLabel")}
+                    </span>
+                    <textarea
+                      maxLength={400}
+                      value={draftLead.notes ?? ""}
+                      onChange={(e) => setDraftLead({ ...draftLead, notes: e.target.value })}
+                      placeholder={t("leads.notesPlaceholder")}
+                      className="mt-1 w-full min-h-[96px] resize-none rounded-md border border-border bg-background px-2 py-1.5 text-sm text-foreground"
+                    />
+                    <div className="mt-1 text-[11px] text-muted-foreground text-right">
+                      {(draftLead.notes ?? "").length}/400
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="mt-2 flex items-center justify-between">
@@ -765,7 +804,7 @@ const Leads = () => {
                   {t("leads.deleteCancel")}
                 </button>
               </div>
-            </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
