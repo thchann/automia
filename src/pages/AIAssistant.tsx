@@ -15,11 +15,11 @@ const AIAssistant = () => {
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-2 mb-1">
         <Sparkles className="h-6 w-6 md:h-7 md:w-7 text-[hsl(var(--metric-purple))]" />
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">
+        {/* <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">
           {t("ai.title")}
-        </h1>
+        </h1> */}
       </div>
-      <p className="text-muted-foreground mb-4 md:mb-6">{t("ai.subtitle")}</p>
+      {/* <p className="text-muted-foreground mb-4 md:mb-6">{t("ai.subtitle")}</p> */}
 
       <div className="flex-1 bg-card rounded-xl border border-border p-4 md:p-6 flex flex-col">
         <div className="flex-1">

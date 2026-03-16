@@ -232,10 +232,10 @@ const Cars = () => {
 
   return (
     <div>
-      <div className="mb-4 md:mb-6 text-left">
+      {/* <div className="mb-4 md:mb-6 text-left">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("cars.title")}</h1>
         <p className="text-muted-foreground mt-1">{t("cars.subtitle")}</p>
-      </div>
+      </div> */}
 
       {/* Search + filters + primary action row (same layout on mobile & desktop) */}
       <div className="flex items-center justify-between gap-4 mb-4">

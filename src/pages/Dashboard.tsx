@@ -42,10 +42,10 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("dashboard.title")}</h1>
-      <p className="text-muted-foreground mt-1">{t("dashboard.subtitle")}</p>
+      {/* <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("dashboard.title")}</h1>
+      <p className="text-muted-foreground mt-1">{t("dashboard.subtitle")}</p> */}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-4">
         {metrics.map((m) => {
           const styles = metricIconStyles[m.colorClass];
           return (
