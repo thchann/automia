@@ -223,18 +223,18 @@
     @apply bg-background text-foreground;
   }
 
-  .app-logo {
-    font-family: "Amazing Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-
   .font-title {
-    font-family: "Codec Cold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    font-family: "Codec Cold", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .app-logo {
+    font-family: "Amazing Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 }

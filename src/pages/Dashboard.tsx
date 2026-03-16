@@ -42,10 +42,10 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("dashboard.title")}</h1>
-      <p className="text-muted-foreground mt-1">{t("dashboard.subtitle")}</p> */}
+      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("dashboard.title")}</h1>
+      <p className="text-muted-foreground mt-1">{t("dashboard.subtitle")}</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
         {metrics.map((m) => {
           const styles = metricIconStyles[m.colorClass];
           return (
@@ -70,19 +70,19 @@ const Dashboard = () => {
           <table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-t border-border">
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3">
                   {t("dashboard.table.name")}
                 </th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3">
                   {t("dashboard.table.car")}
                 </th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3">
                   {t("dashboard.table.source")}
                 </th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3">
                   {t("dashboard.table.status")}
                 </th>
-                <th className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3">
+                <th className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3">
                   {t("dashboard.table.date")}
                 </th>
               </tr>

@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Search, Filter } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -178,6 +178,8 @@ const Leads = () => {
   const [draftLead, setDraftLead] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [leadToConfirmDelete, setLeadToConfirmDelete] = useState<Lead | null>(null);
+  const [showSearch, setShowSearch] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement | null>(null);
   const [visibleColumns, setVisibleColumns] = useState<LeadColumnKey[]>(() => {
     try {
       const stored = localStorage.getItem(LEADS_VISIBLE_COLUMNS_KEY);
@@ -308,6 +310,22 @@ const Leads = () => {
 
   const orderedColumns = localizedLeadColumns.filter((c) => visibleColumns.includes(c.key));
 
+  useEffect(() => {
+    if (!showSearch) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowSearch(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSearch]);
+
   const sortedLeads = (() => {
     // Start from original leads
     let result = [...leads];
@@ -403,53 +421,66 @@ const Leads = () => {
       {view === "table" && (
         <>
           {/* Search, filters, and table – shared across mobile and desktop */}
-          <div className="flex items-center gap-4 mt-6">
-            <input
-              type="text"
-              // Search is not wired yet; placeholder for future behavior.
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t("leads.searchPlaceholder")}
-              className="w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            />
-            <div className="flex items-center gap-2 text-xs">
-              <details className="relative">
-                <summary className="list-none cursor-pointer rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
-                  {t("leads.filters")}
-                </summary>
-                <div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
-                  <p className="text-xs font-semibold text-muted-foreground mb-1">
-                    {t("leads.visibleColumns")}
-                  </p>
-                  <div className="flex flex-col space-y-1 max-h-40 overflow-auto mb-1">
-                    {localizedLeadColumns.map((col) => (
-                      <label
+          <div className="flex items-center gap-2 mt-6" ref={searchContainerRef}>
+            {showSearch ? (
+              <div className="flex items-center w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm">
+                <Search className="h-4 w-4 text-muted-foreground mr-2" />
+                <input
+                  type="text"
+                  placeholder={t("leads.searchPlaceholder")}
+                  className="flex-1 bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
+                />
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowSearch(true)}
+                className="min-h-9 min-w-9 flex items-center justify-center rounded-lg border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                aria-label={t("leads.searchPlaceholder")}
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            )}
+            <details className="relative">
+              <summary
+                className="list-none cursor-pointer min-h-9 min-w-9 flex items-center justify-center rounded-lg border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                aria-label={t("leads.filters")}
+              >
+                <Filter className="h-4 w-4" />
+              </summary>
+              <div className="absolute left-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  {t("leads.visibleColumns")}
+                </p>
+                <div className="flex flex-col max-h-40 overflow-auto mb-1 divide-y divide-border border border-border rounded-md">
+                  {localizedLeadColumns.map((col) => {
+                    const isSelected = visibleColumns.includes(col.key);
+                    return (
+                    <button
                         key={col.key}
-                        className="flex w-full items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted transition-colors"
-                      >
-                        <input
-                          type="checkbox"
-                          className="shrink-0"
-                          checked={visibleColumns.includes(col.key)}
-                          onChange={(e) => {
-                            const checked = e.target.checked;
-                            setVisibleColumns((prev) => {
-                              if (checked) {
-                                return prev.includes(col.key) ? prev : [...prev, col.key];
-                              }
+                        type="button"
+                        className={`w-full flex items-center px-2 py-1.5 text-left text-xs rounded-none transition-colors ${
+                          isSelected
+                            ? "bg-background text-foreground font-semibold"
+                            : "bg-muted text-[hsl(var(--metric-orange))]"
+                        }`}
+                        onClick={() => {
+                          setVisibleColumns((prev) => {
+                            if (isSelected) {
                               const next = prev.filter((k) => k !== col.key);
-                              // Prevent hiding all columns
                               return next.length ? next : prev;
-                            });
-                          }}
-                        />
-                        <span className="flex-1 text-xs text-foreground">{col.label}</span>
-                      </label>
-                    ))}
-                  </div>
+                            }
+                            return prev.includes(col.key) ? prev : [...prev, col.key];
+                          });
+                        }}
+                      >
+                        <span className="flex-1">{col.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
-              </details>
-            </div>
+              </div>
+            </details>
           </div>
 
           <div className="bg-card rounded-xl shadow-sm border border-border overflow-x-auto mt-4">
@@ -475,7 +506,7 @@ const Leads = () => {
                     return (
                       <th
                         key={col.key}
-                        className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3"
+                        className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3"
                       >
                         <button
                           type="button"
@@ -527,7 +558,7 @@ const Leads = () => {
 
       {/* View-only lead details dialog (opened from row/card click) */}
       <Dialog open={!!selectedLead} onOpenChange={(open) => !open && setSelectedLead(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md rounded-xl">
           <DialogHeader>
             <DialogTitle>{t("leads.leadDetails")}</DialogTitle>
           </DialogHeader>
@@ -649,7 +680,7 @@ const Leads = () => {
           }
         }}
       >
-        <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
+        <DialogContent className="max-w-md max-h-[80vh] flex flex-col rounded-xl">
           <DialogHeader>
             <DialogTitle>{t("leads.leadEdit")}</DialogTitle>
           </DialogHeader>
@@ -811,7 +842,7 @@ const Leads = () => {
 
       {/* First delete dialog: initial confirmation */}
       <AlertDialog open={!!leadToDelete} onOpenChange={(open) => !open && setLeadToDelete(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("leads.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -842,7 +873,7 @@ const Leads = () => {
         open={!!leadToConfirmDelete}
         onOpenChange={(open) => !open && setLeadToConfirmDelete(null)}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("leads.deleteConfirmTitle")}</AlertDialogTitle>
             <AlertDialogDescription>

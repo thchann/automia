@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Plus, MoreVertical, ExternalLink } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, MoreVertical, ExternalLink, Search, Filter } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import {
   Dialog,
@@ -109,6 +109,8 @@ const carColumns: CarColumnConfig[] = [
 
 const Cars = () => {
   const [carsState, setCarsState] = useState<Car[]>(cars);
+  const [showSearch, setShowSearch] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement | null>(null);
   const [visibleColumns, setVisibleColumns] = useState<CarColumnKey[]>(() => {
     try {
       const stored = localStorage.getItem(CARS_VISIBLE_COLUMNS_KEY);
@@ -189,6 +191,22 @@ const Cars = () => {
 
   const orderedColumns = localizedColumns.filter((c) => visibleColumns.includes(c.key));
 
+  useEffect(() => {
+    if (!showSearch) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowSearch(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSearch]);
+
   const sortedCars = (() => {
     let result = [...carsState];
 
@@ -239,50 +257,66 @@ const Cars = () => {
 
       {/* Search + filters + primary action row (same layout on mobile & desktop) */}
       <div className="flex items-center justify-between gap-4 mb-4">
-        <div className="flex items-center gap-4">
-          <input
-            type="text"
-            placeholder={t("cars.searchPlaceholder")}
-            className="w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          />
-          <div className="flex items-center gap-2 text-xs">
-            <details className="relative">
-              <summary className="list-none cursor-pointer rounded-md border border-border bg-background px-3 py-2 text-sm hover:bg-muted">
-                {t("cars.filters")}
-              </summary>
-              <div className="absolute right-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">
-                  {t("cars.visibleColumns")}
-                </p>
-                <div className="flex flex-col space-y-1 max-h-40 overflow-auto mb-1">
-                  {localizedColumns.map((col) => (
-                    <label
+        <div className="flex items-center gap-2" ref={searchContainerRef}>
+          {showSearch ? (
+            <div className="flex items-center w-full max-w-xs rounded-md border border-border bg-background px-3 py-2 text-sm">
+              <Search className="h-4 w-4 text-muted-foreground mr-2" />
+              <input
+                type="text"
+                placeholder={t("cars.searchPlaceholder")}
+                className="flex-1 bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
+              />
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowSearch(true)}
+              className="min-h-9 min-w-9 flex items-center justify-center rounded-lg border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label={t("cars.searchPlaceholder")}
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          )}
+          <details className="relative">
+            <summary
+              className="list-none cursor-pointer min-h-9 min-w-9 flex items-center justify-center rounded-lg border border-border bg-background text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label={t("cars.filters")}
+            >
+              <Filter className="h-4 w-4" />
+            </summary>
+            <div className="absolute left-0 mt-2 w-64 rounded-md border border-border bg-background p-3 shadow-md z-50">
+              <p className="text-xs font-semibold text-muted-foreground mb-1">
+                {t("cars.visibleColumns")}
+              </p>
+              <div className="flex flex-col max-h-40 overflow-auto mb-1 divide-y divide-border border border-border rounded-md">
+                {localizedColumns.map((col) => {
+                  const isSelected = visibleColumns.includes(col.key);
+                  return (
+                    <button
                       key={col.key}
-                      className="flex w-full items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-muted transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        className="shrink-0"
-                        checked={visibleColumns.includes(col.key)}
-                        onChange={(e) => {
-                          const checked = e.target.checked;
-                          setVisibleColumns((prev) => {
-                            if (checked) {
-                              return prev.includes(col.key) ? prev : [...prev, col.key];
-                            }
+                      type="button"
+                      className={`w-full flex items-center px-2 py-1.5 text-left text-xs rounded-none transition-colors ${
+                        isSelected
+                          ? "bg-background text-foreground font-semibold"
+                          : "bg-muted text-[hsl(var(--metric-orange))]"
+                      }`}
+                      onClick={() => {
+                        setVisibleColumns((prev) => {
+                          if (isSelected) {
                             const next = prev.filter((k) => k !== col.key);
-                            // Prevent hiding all columns
                             return next.length ? next : prev;
-                          });
-                        }}
-                      />
-                      <span className="flex-1 text-xs text-foreground">{col.label}</span>
-                    </label>
-                  ))}
-                </div>
+                          }
+                          return prev.includes(col.key) ? prev : [...prev, col.key];
+                        });
+                      }}
+                    >
+                      <span className="flex-1">{col.label}</span>
+                    </button>
+                  );
+                })}
               </div>
-            </details>
-          </div>
+            </div>
+          </details>
         </div>
         <button className="ml-4 px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2 border border-border hover:opacity-90 transition-opacity">
           <Plus className="h-4 w-4" />
@@ -313,7 +347,7 @@ const Cars = () => {
                 return (
                   <th
                     key={col.key}
-                    className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider px-4 md:px-6 py-3"
+                    className="text-left text-xs font-semibold text-muted-foreground uppercase px-4 md:px-6 py-3"
                   >
                     <button
                       type="button"
@@ -462,7 +496,7 @@ const Cars = () => {
           if (!open) setSelectedCarSource(null);
         }}
       >
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md rounded-xl">
           <DialogHeader>
             <DialogTitle>{t("cars.sourceDetailsTitle")}</DialogTitle>
           </DialogHeader>
@@ -508,7 +542,7 @@ const Cars = () => {
           if (!open) setCarToDelete(null);
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("cars.deleteTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -539,7 +573,7 @@ const Cars = () => {
           if (!open) setCarToConfirmDelete(null);
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>{t("cars.deleteConfirmTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
