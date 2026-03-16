@@ -38,6 +38,7 @@ export type Lead = {
   status: string;
   source: string;
   date: string;
+  notes?: string;
 };
 
 export type FunnelColumn = {
@@ -53,13 +54,83 @@ const statusStyles: Record<string, string> = {
 };
 
 const initialLeads: Lead[] = [
-  { id: "1", name: "John Martinez", instagram: "@johnm_auto", phone: "(555) 123-4567", car: "2024 Tesla Model 3", status: "New", source: "Instagram DM", date: "Mar 8, 2026" },
-  { id: "2", name: "Sarah Johnson", instagram: "@sarahj", phone: "(555) 234-5678", car: "2023 BMW M4", status: "Contacted", source: "Facebook", date: "Mar 7, 2026" },
-  { id: "3", name: "Michael Chen", instagram: "@mikechen", phone: "(555) 345-6789", car: "2024 Porsche 911", status: "Qualified", source: "Instagram Story", date: "Mar 7, 2026" },
-  { id: "4", name: "Emma Wilson", instagram: "@emmaw", phone: "(555) 456-7890", car: "2023 Mercedes C-Class", status: "New", source: "Website Form", date: "Mar 6, 2026" },
-  { id: "5", name: "David Brown", instagram: "@dbrown_cars", phone: "(555) 567-8901", car: "2024 Audi RS6", status: "Contacted", source: "Instagram DM", date: "Mar 6, 2026" },
-  { id: "6", name: "Lisa Anderson", instagram: "@lisaa", phone: "(555) 678-9012", car: "2023 Lexus LC 500", status: "Qualified", source: "Instagram Post", date: "Mar 5, 2026" },
-  { id: "7", name: "Robert Taylor", instagram: "@rob_t", phone: "(555) 789-0123", car: "2024 Tesla Model S", status: "New", source: "Instagram DM", date: "Mar 5, 2026" },
+  {
+    id: "1",
+    name: "John Martinez",
+    instagram: "@johnm_auto",
+    phone: "(555) 123-4567",
+    car: "2024 Tesla Model 3",
+    status: "New",
+    source: "Instagram DM",
+    date: "Mar 8, 2026",
+    notes: "",
+  },
+  {
+    id: "2",
+    name: "Sarah Johnson",
+    instagram: "@sarahj",
+    phone: "(555) 234-5678",
+    car: "2023 BMW M4",
+    status: "Contacted",
+    source: "Facebook",
+    date: "Mar 7, 2026",
+    notes: "",
+  },
+  {
+    id: "3",
+    name: "Michael Chen",
+    instagram: "@mikechen",
+    phone: "(555) 345-6789",
+    car: "2024 Porsche 911",
+    status: "Qualified",
+    source: "Instagram Story",
+    date: "Mar 7, 2026",
+    notes: "",
+  },
+  {
+    id: "4",
+    name: "Emma Wilson",
+    instagram: "@emmaw",
+    phone: "(555) 456-7890",
+    car: "2023 Mercedes C-Class",
+    status: "New",
+    source: "Website Form",
+    date: "Mar 6, 2026",
+    notes: "",
+  },
+  {
+    id: "5",
+    name: "David Brown",
+    instagram: "@dbrown_cars",
+    phone: "(555) 567-8901",
+    car: "2024 Audi RS6",
+    status: "Contacted",
+    source: "Instagram DM",
+    date: "Mar 6, 2026",
+    notes: "",
+  },
+  {
+    id: "6",
+    name: "Lisa Anderson",
+    instagram: "@lisaa",
+    phone: "(555) 678-9012",
+    car: "2023 Lexus LC 500",
+    status: "Qualified",
+    source: "Instagram Post",
+    date: "Mar 5, 2026",
+    notes: "",
+  },
+  {
+    id: "7",
+    name: "Robert Taylor",
+    instagram: "@rob_t",
+    phone: "(555) 789-0123",
+    car: "2024 Tesla Model S",
+    status: "New",
+    source: "Instagram DM",
+    date: "Mar 5, 2026",
+    notes: "",
+  },
 ];
 
 const defaultFunnelColumns: FunnelColumn[] = [
@@ -103,7 +174,10 @@ const Leads = () => {
   const [view, setView] = useState<"table" | "funnel">("table");
   const [funnelColumns, setFunnelColumns] = useState<FunnelColumn[]>(defaultFunnelColumns);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  const [draftLead, setDraftLead] = useState<Lead | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [leadToConfirmDelete, setLeadToConfirmDelete] = useState<Lead | null>(null);
   const [visibleColumns, setVisibleColumns] = useState<LeadColumnKey[]>(() => {
     try {
       const stored = localStorage.getItem(LEADS_VISIBLE_COLUMNS_KEY);
@@ -165,9 +239,9 @@ const Leads = () => {
   };
 
   const confirmDelete = () => {
-    if (leadToDelete) {
-      setLeads((prev) => prev.filter((l) => l.id !== leadToDelete.id));
-      setLeadToDelete(null);
+    if (leadToConfirmDelete) {
+      setLeads((prev) => prev.filter((l) => l.id !== leadToConfirmDelete.id));
+      setLeadToConfirmDelete(null);
     }
   };
 
@@ -198,8 +272,23 @@ const Leads = () => {
         status: "New",
         source: "",
         date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+        notes: "",
       },
     ]);
+  };
+
+  const handleOpenEditLead = (lead: Lead) => {
+    setEditingLead(lead);
+    setDraftLead({ ...lead, notes: lead.notes ?? "" });
+  };
+
+  const handleSaveLeadEdits = () => {
+    if (!draftLead) return;
+    const trimmedNotes = (draftLead.notes ?? "").slice(0, 400).trim();
+    const nextLead: Lead = { ...draftLead, notes: trimmedNotes.length ? trimmedNotes : "" };
+    setLeads((prev) => prev.map((l) => (l.id === nextLead.id ? nextLead : l)));
+    setEditingLead(null);
+    setDraftLead(null);
   };
 
   const handleHeaderSort = (key: LeadColumnKey) => {
@@ -410,9 +499,10 @@ const Leads = () => {
                     lead={lead}
                     statusStyles={statusStyles}
                     variant="row"
-                    onEdit={setSelectedLead}
+                    onEdit={handleOpenEditLead}
                     onDelete={handleDeleteLead}
                     visibleColumns={orderedColumns.map((c) => c.key)}
+                    onLeadClick={setSelectedLead}
                   />
                 ))}
               </tbody>
@@ -435,6 +525,7 @@ const Leads = () => {
         </div>
       )}
 
+      {/* View-only lead details dialog (opened from row/card click) */}
       <Dialog open={!!selectedLead} onOpenChange={(open) => !open && setSelectedLead(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -532,11 +623,154 @@ const Leads = () => {
                 <br />
                 {selectedLead.date}
               </p>
+              {selectedLead.notes && selectedLead.notes.trim().length > 0 && (
+                <p>
+                  <span className="font-medium text-muted-foreground">
+                    {t("leads.notesLabel")}
+                  </span>
+                  <br />
+                  <span className="whitespace-pre-wrap break-words">
+                    {selectedLead.notes}
+                  </span>
+                </p>
+              )}
             </div>
           )}
         </DialogContent>
       </Dialog>
 
+      {/* Edit lead dialog (opened from actions -> Edit lead) */}
+      <Dialog
+        open={!!editingLead}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditingLead(null);
+            setDraftLead(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("leads.leadEdit")}</DialogTitle>
+          </DialogHeader>
+          {draftLead && (
+            <div className="grid gap-3 text-sm">
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.name")}
+                </span>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.name}
+                  onChange={(e) => setDraftLead({ ...draftLead, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.instagram")}
+                </span>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.instagram}
+                  onChange={(e) => setDraftLead({ ...draftLead, instagram: e.target.value })}
+                />
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.phone")}
+                </span>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.phone}
+                  onChange={(e) => setDraftLead({ ...draftLead, phone: e.target.value })}
+                />
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.column.car")}
+                </span>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.car}
+                  onChange={(e) => setDraftLead({ ...draftLead, car: e.target.value })}
+                />
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.status")}
+                </span>
+                <select
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.status}
+                  onChange={(e) => setDraftLead({ ...draftLead, status: e.target.value })}
+                >
+                  {funnelColumns.map((col) => (
+                    <option key={col.id} value={col.statusKey}>
+                      {getLeadStatusLabel(col.statusKey)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.source")}
+                </span>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.source}
+                  onChange={(e) => setDraftLead({ ...draftLead, source: e.target.value })}
+                />
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.date")}
+                </span>
+                <input
+                  className="mt-1 w-full rounded-md border border-border bg-background px-2 py-1.5 text-sm"
+                  value={draftLead.date}
+                  onChange={(e) => setDraftLead({ ...draftLead, date: e.target.value })}
+                />
+              </div>
+              <div>
+                <span className="font-medium text-muted-foreground">
+                  {t("leads.notesLabel")}
+                </span>
+                <textarea
+                  maxLength={400}
+                  value={draftLead.notes ?? ""}
+                  onChange={(e) => setDraftLead({ ...draftLead, notes: e.target.value })}
+                  placeholder={t("leads.notesPlaceholder")}
+                  className="mt-1 w-full min-h-[96px] resize-none rounded-md border border-border bg-background px-2 py-1.5 text-sm text-foreground"
+                />
+                <div className="mt-1 text-[11px] text-muted-foreground text-right">
+                  {(draftLead.notes ?? "").length}/400
+                </div>
+              </div>
+              <div className="mt-2 flex items-center justify-between">
+                <button
+                  type="button"
+                  className="px-3 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium border border-border hover:opacity-90 transition-opacity"
+                  onClick={handleSaveLeadEdits}
+                >
+                  {t("leads.saveChanges")}
+                </button>
+                <button
+                  type="button"
+                  className="px-3 py-2 rounded-md border border-border text-sm text-muted-foreground hover:bg-muted transition-colors"
+                  onClick={() => {
+                    setEditingLead(null);
+                    setDraftLead(null);
+                  }}
+                >
+                  {t("leads.deleteCancel")}
+                </button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* First delete dialog: initial confirmation */}
       <AlertDialog open={!!leadToDelete} onOpenChange={(open) => !open && setLeadToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -549,8 +783,42 @@ const Leads = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t("leads.deleteCancel")}</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={() => {
+                if (leadToDelete) {
+                  setLeadToConfirmDelete(leadToDelete);
+                  setLeadToDelete(null);
+                }
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               {t("leads.deleteConfirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Second delete dialog: final irreversible confirmation */}
+      <AlertDialog
+        open={!!leadToConfirmDelete}
+        onOpenChange={(open) => !open && setLeadToConfirmDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("leads.deleteConfirmTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {leadToConfirmDelete
+                ? t("leads.deleteConfirmDescription", { name: leadToConfirmDelete.name })
+                : null}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("leads.deleteCancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-black text-destructive hover:bg-black/90"
+            >
+              Confirm
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
