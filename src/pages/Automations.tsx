@@ -51,10 +51,10 @@ const Automations = () => {
   const { t } = useLanguage();
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">
+      {/* <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">
         {t("automations.title")}
       </h1>
-      <p className="text-muted-foreground mt-1">{t("automations.subtitle")}</p>
+      <p className="text-muted-foreground mt-1">{t("automations.subtitle")}</p> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-6 md:mt-8">
         {automations.map((a) => (

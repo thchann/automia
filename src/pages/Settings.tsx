@@ -16,8 +16,8 @@ const SettingsPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("settings.title")}</h1>
-      <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
+      {/* <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("settings.title")}</h1>
+      <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p> */}
 
       <div className="bg-card rounded-xl shadow-sm border border-border mt-6 md:mt-8">
         <div className="p-4 md:p-6 flex items-center gap-3 border-b border-border">
