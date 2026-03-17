@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
+import OttoLogo from "/Otto_cropped.png";
 
 // Main application navigation used by AppLayout.
 // Two-column layout: fixed-width rail (icons) + text column (labels when expanded).
@@ -28,7 +29,9 @@ const navItems = [
   { titleKey: "nav.settings", url: "/settings", icon: Settings },
 ];
 
-const iconColumnWidth = "w-12 shrink-0"; // 3rem icon column inside rail
+// Match the minimized rail width (SIDEBAR_WIDTH_ICON ≈ 2.75rem) so icons stay
+// centered when the sidebar is collapsed.
+const iconColumnWidth = "w-11 shrink-0";
 
 export function AppSidebar() {
   const { t } = useLanguage();
@@ -40,31 +43,13 @@ export function AppSidebar() {
       {/* Two-column layout: rail (fixed width) + text (hidden when collapsed). Positions stay fixed. */}
       <div className="flex h-full w-full flex-col min-h-0">
         {/* Brand row */}
-        <div className="flex shrink-0 px-3 py-3">
-          {isMobile ? (
-            <div className="flex w-full items-center gap-2">
-              <input
-                type="text"
-                placeholder={t("cars.searchPlaceholder")}
-                className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none"
-              />
-              <SidebarTrigger className="h-8 w-8" aria-label="Close navigation" />
-            </div>
-          ) : (
-            // Desktop: keep the Otto sidebar trigger pinned to the top-left,
-            // without hiding or re-centering it when the sidebar expands.
-            <div className="flex w-full items-start">
-              <SidebarTrigger className="h-9 w-9" aria-label="Toggle navigation" />
-            </div>
-          )}
-        </div>
 
         {/* Desktop expanded header logo removed; handled by global header. */}
 
-        <SidebarContent className="flex-1 gap-0">
+        <SidebarContent className="flex-1 gap-0 px-1">
           <SidebarGroup className="px-0 py-1">
             <SidebarGroupContent>
-              <SidebarMenu className="gap-px">
+              <SidebarMenu className="gap-1">
                 {navItems.map((item) => {
                   const isActive = location.pathname === item.url;
                   return (
@@ -74,13 +59,16 @@ export function AppSidebar() {
                         <SidebarMenuButton
                           asChild
                           size="lg"
+                          isActive={isActive}
                           className={cn(
                             // Full-width, rounded row with tight spacing
                             "h-9 w-full justify-start px-0 bg-transparent transition-colors rounded-md",
-                            // Hover: light grey
-                            "hover:bg-gray-200",
-                            // Pressed: slightly darker while clicking
-                            "active:bg-gray-400",
+                            // Hover: medium grey
+                            "hover:bg-gray-300",
+                            // Selected: darker grey
+                            "data-[active=true]:bg-gray-400",
+                            // Pressed: darkest while clicking
+                            "active:bg-gray-500",
                             "group-data-[state=collapsed]:!h-9 group-data-[state=collapsed]:!w-full",
                           )}
                         >
@@ -117,12 +105,16 @@ export function AppSidebar() {
 
         <SidebarFooter className="flex shrink-0 p-0">
           <div className="flex w-full">
+            {/* Icon rail dock: always visible on desktop, houses the Otto toggle. */}
             <div
               className={cn(
                 "w-[var(--sidebar-width-icon)] shrink-0",
                 "flex items-center justify-center p-3",
               )}
-            />
+            >
+              {!isMobile && <SidebarTrigger className="h-9 w-9" aria-label="Toggle navigation" />}
+            </div>
+            {/* Expanded-only footer content (e.g., cookies pill) */}
             <div
               className={cn(
                 "hidden min-w-0 flex-1 items-center overflow-hidden p-3 pt-0",

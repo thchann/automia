@@ -22,8 +22,10 @@ const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "12rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
-/** Collapsed rail width: match the icon chip size so the minimized rail hugs the icons. */
-const SIDEBAR_WIDTH_ICON = "2.25rem";
+/** Collapsed rail width: wide enough to fully show the icon column. */
+// Slightly narrower minimized rail so it encroaches less into the content
+// area while still comfortably fitting the icon column.
+const SIDEBAR_WIDTH_ICON = "2.75rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContext = {
@@ -123,7 +125,10 @@ const SidebarProvider = React.forwardRef<
               ...style,
             } as React.CSSProperties
           }
-          className={cn("group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar", className)}
+          // Wrapper background: ensure the shell behind both the header and
+          // sidebar rail uses the same sidebar shade so the top-left corner
+          // looks continuous.
+          className={cn("group/sidebar-wrapper flex min-h-svh w-full bg-sidebar", className)}
           ref={ref}
           {...props}
         >
@@ -202,14 +207,17 @@ const Sidebar = React.forwardRef<
       />
       <div
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
+          // Desktop sidebar: starts just below the global header (h-16) so the
+          // header's bottom border and the sidebar's vertical border form a
+          // single L-shaped joint.
+          "fixed top-16 bottom-0 z-10 hidden w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+            : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]",
           className,
         )}
         {...props}
@@ -291,7 +299,9 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<"main
     <main
       ref={ref}
       className={cn(
-        "relative flex min-h-svh flex-1 flex-col bg-background transition-transform duration-200 ease-linear",
+        // Use the same shell background as the header/sidebar so the entire
+        // frame (green area in your screenshot) is a single, continuous color.
+        "relative flex min-h-svh flex-1 flex-col bg-sidebar transition-transform duration-200 ease-linear",
         "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
         isMobile && openMobile && "translate-x-[18rem]",
         className,
