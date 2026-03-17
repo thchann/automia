@@ -19,7 +19,7 @@ const SettingsPage = () => {
       {/* <h1 className="text-2xl md:text-3xl font-bold text-foreground font-title">{t("settings.title")}</h1>
       <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p> */}
 
-      <div className="bg-card rounded-xl shadow-sm border border-border mt-6 md:mt-8">
+      <div className="bg-card rounded-xl shadow-sm border border-border">
         <div className="p-4 md:p-6 flex items-center gap-3 border-b border-border">
           <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center">
             <User className="h-5 w-5 text-muted-foreground" />
