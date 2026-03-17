@@ -1,4 +1,5 @@
 import { LayoutGrid, Car, Users, Zap, MessageCircle, Settings } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -31,6 +32,7 @@ const iconColumnWidth = "w-12 shrink-0"; // 3rem icon column inside rail
 
 export function AppSidebar() {
   const { t } = useLanguage();
+  const location = useLocation();
 
   return (
     <Sidebar collapsible="icon" className="group/sidebar">
@@ -38,21 +40,14 @@ export function AppSidebar() {
       <div className="flex h-full w-full flex-col min-h-0">
         {/* Brand row */}
         <div className="flex shrink-0">
-          <div
-            className={cn(
-              "flex items-center justify-center px-2 py-4",
-              "w-[var(--sidebar-width-icon)] shrink-0",
-              // On desktop, hide this rail trigger when the sidebar is expanded
-              // (we show a header with title + toggle instead).
-              "md:group-data-[state=expanded]/sidebar:hidden",
-            )}
-          >
+          {/* Compact trigger with tight vertical padding so it aligns closely with the nav items. */}
+          <div className="py-1 md:group-data-[state=expanded]/sidebar:hidden justify-center">
             <SidebarTrigger className="hidden h-9 w-9 md:flex" />
           </div>
           <div
             className={cn(
-              // Brand text uses same x-position and spacing pattern as item titles.
-              "hidden min-w-0 flex-1 items-center truncate pr-3 py-4",
+              // Brand text uses same x-position and spacing pattern as item titles, with tight vertical padding.
+              "hidden min-w-0 flex-1 items-center truncate pr-3 py-1",
               "flex md:hidden md:group-data-[state=expanded]:flex",
             )}
           >
@@ -62,8 +57,8 @@ export function AppSidebar() {
           </div>
         </div>
 
-        {/* Desktop-only expanded header: title on the left, toggle on the right. */}
-        <div className="hidden items-center justify-between px-3 py-4 md:group-data-[state=expanded]/sidebar:flex">
+        {/* Desktop-only expanded header: title on the left, toggle on the right, with tight vertical padding. */}
+        <div className="hidden items-center justify-between px-3 py-1 md:group-data-[state=expanded]/sidebar:flex">
           <span className="app-logo font-title truncate text-lg font-bold text-foreground tracking-tight">
             Automia
           </span>
@@ -73,57 +68,52 @@ export function AppSidebar() {
         <SidebarContent className="flex-1 gap-0">
           <SidebarGroup className="px-0 py-1">
             <SidebarGroupContent>
-              <SidebarMenu className="gap-0.5">
-                {navItems.map((item) => (
-                  <div key={item.titleKey} className="flex w-full">
-                    {/* Rail: fixed width; text column: grows when expanded. One NavLink spans both so active state and a11y are correct. */}
-                    <SidebarMenuItem className="group/nav-item w-full shrink-0">
-                      <SidebarMenuButton
-                        asChild
-                        size="lg"
-                        className={cn(
-                          // Full-row hit area; when sidebar is expanded on desktop, hover the entire row
-                          // (icon + label) instead of just the icon chip.
-                          "h-8 w-full justify-start px-0 bg-transparent",
-                          "md:group-data-[state=expanded]/sidebar:hover:bg-sidebar-accent/40",
-                          "group-data-[state=collapsed]:!h-8 group-data-[state=collapsed]:!w-full",
-                        )}
-                      >
-                        <NavLink
-                          to={item.url}
-                          className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden text-sidebar-foreground transition-colors group-hover/nav-item:text-sidebar-accent-foreground"
-                          activeClassName="font-medium text-foreground"
+              <SidebarMenu className="gap-px">
+                {navItems.map((item) => {
+                  const isActive = location.pathname === item.url;
+                  return (
+                    <div key={item.titleKey} className="flex w-full">
+                      {/* Each nav item is a tight, full-width row with minimal vertical spacing. */}
+                      <SidebarMenuItem className="group/nav-item w-full shrink-0">
+                        <SidebarMenuButton
+                          asChild
+                          size="lg"
+                          className={cn(
+                            // Full-width, rounded row with tight spacing
+                            "h-9 w-full justify-start px-0 bg-transparent transition-colors rounded-md",
+                            // Hover: light grey
+                            "hover:bg-gray-200",
+                            // Pressed: slightly darker while clicking
+                            "active:bg-gray-400",
+                            "group-data-[state=collapsed]:!h-9 group-data-[state=collapsed]:!w-full",
+                          )}
                         >
-                          <span
-                            className={cn(
-                              // Fixed rail width; no horizontal padding so border is closer to icon.
-                              "flex h-8 w-[var(--sidebar-width-icon)] shrink-0 items-center justify-center px-0",
-                            )}
+                          <NavLink
+                            to={item.url}
+                            className="flex w-full min-w-0 items-center gap-0 overflow-hidden text-sidebar-foreground"
+                            activeClassName="font-medium text-foreground"
                           >
+                            {/* Icon column */}
+                            <span className="flex-none grid h-9 w-9 place-content-center">
+                              <span className={cn(iconColumnWidth, "grid h-9 place-content-center")}>
+                                <item.icon className="h-5 w-5" />
+                              </span>
+                            </span>
+                            {/* Label column: always visible on mobile; hidden only when sidebar is collapsed on desktop */}
                             <span
                               className={cn(
-                                iconColumnWidth,
-                                "flex h-8 items-center justify-center rounded-lg bg-transparent transition-colors group-hover/nav-item:bg-sidebar-accent group-hover/nav-item:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
+                                "min-w-0 flex-none truncate pr-3 text-sm flex font-title",
+                                "md:group-data-[state=collapsed]/sidebar:hidden",
                               )}
                             >
-                              <item.icon className="h-5 w-5" />
+                              {t(item.titleKey)}
                             </span>
-                          </span>
-                          <span
-                            className={cn(
-                              // On mobile, always show titles when the sheet is open.
-                              // On desktop, only show when the sidebar is expanded.
-                              "min-w-0 flex-1 truncate pr-3 text-sm flex md:hidden font-title",
-                              "md:group-data-[state=expanded]:inline-block",
-                            )}
-                          >
-                            {t(item.titleKey)}
-                          </span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </div>
-                ))}
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </div>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
