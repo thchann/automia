@@ -56,7 +56,7 @@ const Automations = () => {
       </h1>
       <p className="text-muted-foreground mt-1">{t("automations.subtitle")}</p> */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-6 md:mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {automations.map((a) => (
           <div
             key={a.titleKey}

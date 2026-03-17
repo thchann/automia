@@ -1,14 +1,15 @@
 import React from "react";
-import { SidebarProvider, SidebarInset, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, useSidebar } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet, useLocation } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
+import OttoLogo from "/Otto_cropped.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // AppLayoutContent renders the main area inside the sidebar shell,
 // including the mobile header, routed content, and the floating help button.
 function AppLayoutContent() {
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, toggleSidebar } = useSidebar();
   const location = useLocation();
   const isMobile = useIsMobile();
 
@@ -23,11 +24,15 @@ function AppLayoutContent() {
       {/* Mobile-only fixed header with sidebar toggle.
           Stays pinned to the top while content scrolls underneath. */}
       {isMobile && (
-        <header className="fixed inset-x-0 top-0 z-30 flex h-14 items-center border-b border-border bg-background px-4">
-          <SidebarTrigger
-            className="h-8 w-8"
+        <header className="fixed inset-x-0 top-0 z-30 flex h-16 items-center border-b border-border bg-background px-4">
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            className="mr-3 h-10 w-10 flex items-center justify-center rounded-full bg-transparent"
             aria-label="Open navigation"
-          />
+          >
+            <img src={OttoLogo} alt="Automia" className="h-10 w-10 object-contain" />
+          </button>
         </header>
       )}
       {/* Desktop-only persistent structural header bar (sits above the scrollable content). */}
@@ -39,7 +44,7 @@ function AppLayoutContent() {
         </header>
       )}
       {/* Content: add top padding on mobile so it starts below the fixed header. */}
-      <div className="flex-1 relative overflow-auto px-2 pt-8 md:p-4">
+      <div className="flex-1 relative overflow-auto px-4 pt-20 pb-8 md:p-4">
         <Outlet />
       </div>
       <button className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-12 w-12 rounded-full bg-help text-help-foreground shadow-lg flex items-center justify-center hover:opacity-90 transition-opacity">

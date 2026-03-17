@@ -11,10 +11,10 @@ import {
   SidebarMenuItem,
   SidebarFooter,
   SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Main application navigation used by AppLayout.
 // Two-column layout: fixed-width rail (icons) + text column (labels when expanded).
@@ -33,16 +33,30 @@ const iconColumnWidth = "w-12 shrink-0"; // 3rem icon column inside rail
 export function AppSidebar() {
   const { t } = useLanguage();
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   return (
     <Sidebar collapsible="icon" className="group/sidebar">
       {/* Two-column layout: rail (fixed width) + text (hidden when collapsed). Positions stay fixed. */}
       <div className="flex h-full w-full flex-col min-h-0">
-        {/* Brand row: only sidebar trigger. Global header now shows the Automia logo. */}
-        <div className="flex shrink-0">
-          <div className="py-4 md:group-data-[state=expanded]/sidebar:hidden justify-center">
-            <SidebarTrigger className="hidden h-9 w-9 md:flex" />
-          </div>
+        {/* Brand row */}
+        <div className="flex shrink-0 px-3 py-3">
+          {isMobile ? (
+            <div className="flex w-full items-center gap-2">
+              <input
+                type="text"
+                placeholder={t("cars.searchPlaceholder")}
+                className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none"
+              />
+              <SidebarTrigger className="h-8 w-8" aria-label="Close navigation" />
+            </div>
+          ) : (
+            // Desktop: keep the Otto sidebar trigger pinned to the top-left,
+            // without hiding or re-centering it when the sidebar expands.
+            <div className="flex w-full items-start">
+              <SidebarTrigger className="h-9 w-9" aria-label="Toggle navigation" />
+            </div>
+          )}
         </div>
 
         {/* Desktop expanded header logo removed; handled by global header. */}
