@@ -38,32 +38,14 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="group/sidebar">
       {/* Two-column layout: rail (fixed width) + text (hidden when collapsed). Positions stay fixed. */}
       <div className="flex h-full w-full flex-col min-h-0">
-        {/* Brand row */}
+        {/* Brand row: only sidebar trigger. Global header now shows the Automia logo. */}
         <div className="flex shrink-0">
-          {/* Compact trigger with tight vertical padding so it aligns closely with the nav items. */}
-          <div className="py-1 md:group-data-[state=expanded]/sidebar:hidden justify-center">
+          <div className="py-4 md:group-data-[state=expanded]/sidebar:hidden justify-center">
             <SidebarTrigger className="hidden h-9 w-9 md:flex" />
-          </div>
-          <div
-            className={cn(
-              // Brand text uses same x-position and spacing pattern as item titles, with tight vertical padding.
-              "hidden min-w-0 flex-1 items-center truncate pr-3 py-1",
-              "flex md:hidden md:group-data-[state=expanded]:flex",
-            )}
-          >
-            <span className="app-logo truncate text-lg font-bold text-foreground tracking-tight">
-              Automia
-            </span>
           </div>
         </div>
 
-        {/* Desktop-only expanded header: title on the left, toggle on the right, with tight vertical padding. */}
-        <div className="hidden items-center justify-between px-3 py-1 md:group-data-[state=expanded]/sidebar:flex">
-          <span className="app-logo font-title truncate text-lg font-bold text-foreground tracking-tight">
-            Automia
-          </span>
-          <SidebarTrigger className="h-8 w-8 md:inline-flex" aria-label="Toggle sidebar" />
-        </div>
+        {/* Desktop expanded header logo removed; handled by global header. */}
 
         <SidebarContent className="flex-1 gap-0">
           <SidebarGroup className="px-0 py-1">

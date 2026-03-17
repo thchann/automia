@@ -30,8 +30,16 @@ function AppLayoutContent() {
           />
         </header>
       )}
+      {/* Desktop-only persistent structural header bar (sits above the scrollable content). */}
+      {!isMobile && (
+        <header className="flex h-16 items-center border-b border-border bg-background px-4">
+          <span className="app-logo font-title text-2xl font-bold text-foreground tracking-tight">
+            Automia
+          </span>
+        </header>
+      )}
       {/* Content: add top padding on mobile so it starts below the fixed header. */}
-      <div className="flex-1 relative overflow-auto px-4 pt-16 md:p-8">
+      <div className="flex-1 relative overflow-auto px-2 pt-8 md:p-4">
         <Outlet />
       </div>
       <button className="fixed bottom-4 right-4 md:bottom-6 md:right-6 h-12 w-12 rounded-full bg-help text-help-foreground shadow-lg flex items-center justify-center hover:opacity-90 transition-opacity">
