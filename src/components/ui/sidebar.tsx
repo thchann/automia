@@ -20,12 +20,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 // - SidebarTrigger and SidebarRail provide controls to toggle the sidebar from the UI.
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = "12rem";
+// Expanded sidebar width: slightly wider rail for navigation
+const SIDEBAR_WIDTH = "14rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 /** Collapsed rail width: wide enough to fully show the icon column. */
-// Slightly narrower minimized rail so it encroaches less into the content
-// area while still comfortably fitting the icon column.
-const SIDEBAR_WIDTH_ICON = "2.75rem";
+// Wider minimized rail so the icon-only rail still feels substantial.
+const SIDEBAR_WIDTH_ICON = "2.96rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 type SidebarContext = {
@@ -125,10 +125,9 @@ const SidebarProvider = React.forwardRef<
               ...style,
             } as React.CSSProperties
           }
-          // Wrapper background: ensure the shell behind both the header and
-          // sidebar rail uses the same sidebar shade so the top-left corner
-          // looks continuous.
-          className={cn("group/sidebar-wrapper flex min-h-svh w-full bg-sidebar", className)}
+          // Wrapper background + left rail: this padding becomes the left
+          // shell rail between the viewport edge and the sidebar itself.
+          className={cn("group/sidebar-wrapper flex min-h-svh w-full bg-sidebar pl-4 md:pl-8", className)}
           ref={ref}
           {...props}
         >
@@ -200,9 +199,10 @@ const Sidebar = React.forwardRef<
           "relative h-svh bg-transparent transition-[width] duration-200 ease-linear",
           "group-data-[collapsible=offcanvas]:w-0",
           "group-data-[side=right]:rotate-180",
-          collapsible === "icon" && state === "collapsed"
-            ? "w-[--sidebar-width-icon]"
-            : "w-[--sidebar-width]",
+          // When collapsed, reserve a smaller fixed gutter than the actual
+          // icon rail width so the sidebar itself stays the same size while
+          // the gap between the viewport and sidebar shrinks.
+          collapsible === "icon" && state === "collapsed" ? "w-6" : "w-[--sidebar-width]",
         )}
       />
       <div
@@ -224,7 +224,7 @@ const Sidebar = React.forwardRef<
       >
         <div
           data-sidebar="sidebar"
-          className="flex h-full w-full flex-col overflow-hidden bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+          className="flex h-full w-full flex-col overflow-hidden bg-sidebar pl-1 group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
         >
           {children}
         </div>
@@ -302,6 +302,9 @@ const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<"main
         // Use the same shell background as the header/sidebar so the entire
         // frame (green area in your screenshot) is a single, continuous color.
         "relative flex min-h-svh flex-1 flex-col bg-sidebar transition-transform duration-200 ease-linear",
+        // Right rail only between the sidebar and the floating panel. Shrink
+        // this padding to make the blue content region narrower.
+        "pr-1 md:pr-3",
         "peer-data-[variant=inset]:min-h-[calc(100svh-theme(spacing.4))] md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow",
         isMobile && openMobile && "translate-x-[18rem]",
         className,

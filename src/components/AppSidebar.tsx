@@ -29,9 +29,9 @@ const navItems = [
   { titleKey: "nav.settings", url: "/settings", icon: Settings },
 ];
 
-// Match the minimized rail width (SIDEBAR_WIDTH_ICON ≈ 2.75rem) so icons stay
+// Match the minimized rail width (SIDEBAR_WIDTH_ICON ≈ 3.25rem) so icons stay
 // centered when the sidebar is collapsed.
-const iconColumnWidth = "w-11 shrink-0";
+const iconColumnWidth = "w-13 shrink-0";
 
 export function AppSidebar() {
   const { t } = useLanguage();
@@ -114,17 +114,7 @@ export function AppSidebar() {
             >
               {!isMobile && <SidebarTrigger className="h-9 w-9" aria-label="Toggle navigation" />}
             </div>
-            {/* Expanded-only footer content (e.g., cookies pill) */}
-            <div
-              className={cn(
-                "hidden min-w-0 flex-1 items-center overflow-hidden p-3 pt-0",
-                "md:group-data-[state=expanded]:flex",
-              )}
-            >
-              <button className={cn("w-fit whitespace-nowrap rounded-md bg-cookie px-3 py-1.5 text-xs text-cookie-foreground transition-opacity hover:opacity-90")}>
-                {t("nav.cookies")}
-              </button>
-            </div>
+            {/* Footer content removed per design; keep structure for future use. */}
           </div>
         </SidebarFooter>
       </div>
