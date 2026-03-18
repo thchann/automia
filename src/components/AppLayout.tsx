@@ -39,12 +39,16 @@ function AppLayoutContent() {
           can visually bleed over both the sidebar rail and main content. */}
       {/* Content frame: fixed-height floating panel that sits beneath the header.
           The shell (header + sidebar) stays fixed; only the content inside this
-          panel scrolls. */}
-      <div className="flex-1 relative overflow-hidden px-4 pt-16 pb-8 md:px-6 md:pt-20 md:pb-8">
-        <div className="w-full max-w-7xl rounded-3xl border border-border bg-background/95 backdrop-blur-sm mx-auto md:mx-0 md:ml-0 md:mr-2">
+          panel scrolls. Horizontal spacing comes from SidebarInset so rails are
+          symmetric on both sides. */}
+      <div className="flex-1 relative overflow-hidden pt-12 pb-6 md:pt-16 md:pb-6">
+        {/* Floating panel: always spans the full width of the padded content
+            region defined by SidebarInset, so when the window is maximized it
+            fills the entire blue-highlighted area in DevTools. */}
+        <div className="w-full rounded-3xl border border-border bg-background/95 backdrop-blur-sm">
           {/* Inner scroll area: fills the available viewport height beneath the
               header and scrolls independently of the shell. */}
-          <div className="max-h-[calc(100vh-7rem)] overflow-auto px-4 py-4 md:px-6 md:py-6">
+          <div className="max-h-[calc(100vh-6rem)] overflow-auto px-4 py-4 md:px-6 md:py-6">
             <Outlet />
           </div>
         </div>
@@ -65,7 +69,7 @@ export function AppLayout() {
     // SidebarProvider manages global sidebar state. We default to collapsed on
     // desktop so the app starts with an icon rail that expands on hover or via
     // the keyboard shortcut (⌘/Ctrl + B).
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen>
       <>
         {/* Desktop header: fixed and full-width so it can visually overlay the
             sidebar rail and place the Automia logo in the true top-left. */}
